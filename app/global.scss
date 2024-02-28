@@ -1,0 +1,41 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+// Fonts
+$main-font: 'Istok Web', sans-serif;
+
+// Colors
+$color-primary: #6E1010;
+
+$color-secondary: #A83131;
+
+$color-font: #ffffff;
+
+$color-background: #D6A2A2;
+
+:root {
+  margin: 0;
+  padding: 0;
+}
+
+body{
+  font-family: $main-font !important;
+  font-weight: 400 ;
+}
+
+.button-test{
+  background-color: $color-primary;
+  color: $color-font;
+  font-family: $main-font !important;
+  &:hover{
+    background-color: $color-secondary !important;
+    color: $color-font !important;
+    border-color: $color-secondary !important;
+  }
+  &:active{
+    background-color: $color-secondary !important;
+    color: $color-font !important;
+    border-color: $color-secondary !important;
+  }
+}
