@@ -84,6 +84,11 @@ const MobileMenu = () => {
     }
   };
 
+  const handleSearch = (value) => {
+    // Xử lý tìm kiếm ở đây nếu cần
+    console.log('Đang tìm kiếm:', value);
+  };
+
   const MobileItems = [
     {
       key: 'login',
@@ -94,6 +99,7 @@ const MobileMenu = () => {
     { key: 'promotion', icon: null, children: null, label: 'KHUYẾN MÃI' },
     { key: 'about-us', icon: null, children: null, label: 'GIỚI THIỆU' },
   ];
+  
 
   if (isLoggedIn) {
     MobileItems[0].children = [
@@ -111,6 +117,19 @@ const MobileMenu = () => {
           onClick={handleItemClick}
           items={MobileItems}
         />
+        <Space.Compact className='w-full'>
+          <Input 
+            className='search-input'
+            placeholder="Tìm kiếm tên sự kiện"
+            onPressEnter={(e) => handleSearch(e.target.value)}
+          />
+          <Button 
+            className='search-button flex items-center'
+            icon={<SearchOutlined 
+            style={{ fontSize: '20px', marginLeft: '15px' }} />}
+            onClick={() => handleSearch()}
+          />
+        </Space.Compact>
       </div>
     </div>
   );
@@ -193,7 +212,7 @@ export default function Header() {
                   />
                   <Button 
                     className='search-button flex items-center'
-                    icon={<SearchOutlined style={{ fontSize: '20px' }} />}
+                    icon={<SearchOutlined style={{ fontSize: '20px', marginLeft: '15px' }} />}
                   >
                   </Button>
                 </Space.Compact>

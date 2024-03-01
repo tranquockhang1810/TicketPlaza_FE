@@ -71,10 +71,38 @@ export default function Footer(){
                             Mạng xã hội
                         </h1>
                         <div className="flex justify-center">
-                            <FacebookOutlined style={{ fontSize: '50px', marginRight: '25px' }}/>
-                            <InstagramOutlined style={{ fontSize: '50px', marginRight: '25px' }}/>
-                            <LinkedinOutlined style={{ fontSize: '50px', marginRight: '25px' }}/>
-                            <YoutubeOutlined style={{ fontSize: '50px', marginRight: '25px' }}/>
+                            <a 
+                                href="https://www.facebook.com/tranquockhang1810" 
+                                target="_blank" 
+                                rel="noopener noreferrer" 
+                                className="hover:cursor-pointer hover:text-gray-300"
+                            >
+                                <FacebookOutlined style={{ fontSize: '50px', marginRight: '25px' }}/>
+                            </a>
+                            <a 
+                                href="https://www.instagram.com/tranquockhang1810" 
+                                target="_blank" 
+                                rel="noopener noreferrer" 
+                                className="hover:cursor-pointer hover:text-gray-300"
+                            >
+                                <InstagramOutlined style={{ fontSize: '50px', marginRight: '25px' }}/>
+                            </a>
+                            <a 
+                                href="https://www.linkedin.com/in/tranquockhang1810" 
+                                target="_blank" 
+                                rel="noopener noreferrer" 
+                                className="hover:cursor-pointer hover:text-gray-300"
+                            >
+                                <LinkedinOutlined style={{ fontSize: '50px', marginRight: '25px' }}/>
+                            </a>    
+                            <a 
+                                href="https://www.youtube.com/@tranquockhang1810" 
+                                target="_blank" 
+                                rel="noopener noreferrer" 
+                                className="hover:cursor-pointer hover:text-gray-300"
+                            >
+                                <YoutubeOutlined style={{ fontSize: '50px', marginRight: '25px' }}/>
+                            </a>
                         </div>
                     </div>
                     <div className="w-full text-white font-bold text-2xl text-center my-5">
