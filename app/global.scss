@@ -173,3 +173,25 @@ body{
     background-color: $color-primary !important;
   }
 }
+
+.bg-footer{
+  background-color: $color-primary !important;
+}
+
+.footer-block{
+  width: 380px;
+  height: fit-content;
+  text-align: center;
+  //background-color: $color-background;
+  margin: 20px auto;
+  color: $color-font;
+  font-weight: 700;
+  @media screen and (max-width: 1024px) {
+    width: 100%;
+  }
+}
+
+.footer-text{
+  color: $color-font;
+  font-weight: 700;
+}
