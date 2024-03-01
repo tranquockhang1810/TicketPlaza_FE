@@ -1,18 +1,9 @@
-import { Button } from 'antd';
-import '../app/layout'
+import React from 'react';
+import '../app/layout';
 
-export default function Page() {
+export default function HomePage() {
   return (
-    <div className='flex justify-center'>
-      <p 
-        className='m-2'
-      >
-        XIN CHÀO BÉ IU
-      </p>
-      <Button
-        className='button-test m-2'
-      >
-        Nút
-      </Button>
+    <div>
+      Code đống trang chủ mệt vaiiii
     </div>
 )}
