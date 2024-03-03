@@ -43,12 +43,12 @@ export default function Banner() {
     };
     return (
       <section id="banner">
-        <div className='mx-auto my-3 lg:px-6'>
+        <div className='mx-auto mt-3 lg:px-6'>
           {width && (
             <div className='lg:block hidden'>
               <Carousel {...settings}>
                 {BANNERS.map((item, index) => (
-                  <div key={index} className='w-full'>
+                  <div key={index}>
                     <img alt="banner" src={item} className="w-full mx-auto" />
                   </div>
                 ))}

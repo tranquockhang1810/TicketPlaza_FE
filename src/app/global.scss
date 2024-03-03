@@ -194,3 +194,41 @@ body{
   color: $color-font;
   font-weight: 700;
 }
+
+.section-header{
+  font-weight: 700;
+  color: $color-secondary;
+  text-align: center;
+}
+
+.ant-card{
+  max-width: 320px;
+  margin: 12px;
+  font-family: $main-font !important;
+  background-color: $color-secondary !important;
+  color: $color-font;
+
+  &:hover{
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.5);
+    background-color: $color-primary !important;
+
+    .ant-card-actions{
+      background-color: $color-primary !important;
+    }
+  }
+
+  .ant-card-actions{
+    background-color: $color-secondary !important;
+    color: $color-font !important;
+    font-weight: 700;
+
+    li{
+      color: $color-font !important;
+      span{
+        &:hover{
+          color: $color-font !important;
+        }
+      }
+    }
+  }
+}

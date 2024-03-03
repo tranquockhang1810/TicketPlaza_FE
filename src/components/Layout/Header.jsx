@@ -7,20 +7,20 @@ import React, { useState } from 'react';
 const HEADERS = [
   {
     label: `CÁC SỰ KIỆN`,
-    path: `/`,
+    path: `/events`,
   },
   {
     label: `KHUYẾN MÃI`,
-    path: `/`,
+    path: `/promotion`,
   },
   {
     label: `GIỚI THIỆU`,
-    path: `/`,
+    path: `/about-us`,
   }
 ];
 
 const AccountOptions = [
-  { key: 'profile', label: 'Thông tin' },
+  { key: 'profile', label: 'Thông tin'},
   { key: 'logout', label: 'Đăng xuất' }
 ];
 
@@ -73,7 +73,7 @@ const MenuButton = ({ toggleMenu, showMenu }) => (
   </button>
 );
 
-const MobileMenu = () => {
+const MobileMenu = ({history}) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const handleItemClick = ({ key }) => {
@@ -81,6 +81,9 @@ const MobileMenu = () => {
       setIsLoggedIn(true);
     } else if (key === 'logout') {
       setIsLoggedIn(false);
+    } else {
+      const path = '/' + key;
+      history.push(path);
     }
   };
 
@@ -135,7 +138,7 @@ const MobileMenu = () => {
   );
 };
 
-export default function Header() {
+export default function Header({history}) {
   const [showMenu, setShowMenu] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [language, setLanguage] = useState('VN');
@@ -147,6 +150,9 @@ export default function Header() {
   const handleAccountOptionClick = ({ key }) => {
     if (key === 'logout') {
       setIsLoggedIn(false);
+    } else {
+      const path = '/' + key;
+      history.push(path);
     }
   };
   
@@ -159,17 +165,6 @@ export default function Header() {
     e.preventDefault();
     setShowMenu(!showMenu);
   };
-
-  const accountMenu = (
-    <Menu 
-      onClick={handleAccountOptionClick}
-      className='desktop-dropdown-menu'
-    >
-      {AccountOptions.map((option) => (
-        <Menu.Item key={option.key}>{option.label}</Menu.Item>
-      ))}
-    </Menu>
-  );
 
   return (
     <nav>
@@ -190,6 +185,7 @@ export default function Header() {
             <div className='flex items-stretch'>
               <div
                 className='flex mt-auto flex-shrink-0 cursor-pointer'
+                onClick={() => {history.push('/')}}
               >
                 <img
                   className='w-full h-12'
@@ -221,7 +217,16 @@ export default function Header() {
               <div className='flex items-stretch'>
                 {isLoggedIn ? ( 
                   <Dropdown 
-                    overlay={accountMenu} 
+                    overlay={
+                      <Menu 
+                        onClick={handleAccountOptionClick}
+                        className='desktop-dropdown-menu'
+                      >
+                        {AccountOptions.map((option) => (
+                          <Menu.Item key={option.key}>{option.label}</Menu.Item>
+                        ))}
+                      </Menu>
+                    } 
                     trigger={['hover']}
                   >
                     <Button className='main-button flex items-center'>
@@ -265,7 +270,7 @@ export default function Header() {
             </div>
           </div>
         </div>
-        {showMenu ? <MobileMenu/> : null}
+        {showMenu ? <MobileMenu history={history}/> : null}
         <Divider className='border-t-1 my-2' style={{borderTopColor: '#D6A2A2'}} />
         <div className='max-w-7xl mx-auto px-6 pb-2.5 hidden lg:flex h-full justify-end'>
           <div className='bg-header flex items-center'>
@@ -275,6 +280,7 @@ export default function Header() {
                 <div
                   key={link.label}
                   className='nav-button flex items-center ml-10 text-center'
+                  onClick={() => history.push(link.path)}
                 >
                   {link.label}
                 </div>

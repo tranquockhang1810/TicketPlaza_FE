@@ -25,11 +25,11 @@ export default function Footer(){
                         <p className="w-full text-lg lg:text-left text-center mt-5">
                             HỆ THỐNG MUA VÉ THAM DỰ SỰ KIỆN DÀNH CHO GIỚI TRẺ
                         </p>
-                        <p className="w-full text-base lg:text-left text-center mt-5 hover:underline hover:cursor-pointer">
-                            Mua hàng & Thanh toán
+                        <p className="w-full text-base lg:text-left text-center mt-5 ">
+                            <span className="hover:underline hover:cursor-pointer">Mua hàng & Thanh toán</span>
                         </p>
-                        <p className="w-full text-base lg:text-left text-center mt-5 hover:underline hover:cursor-pointer">
-                            Chính sách & Điều khoản
+                        <p className="w-full text-base lg:text-left text-center mt-5">
+                            <span className="hover:underline hover:cursor-pointer">Chính sách & Điều khoản</span>
                         </p>
                     </div>
                     <div className="footer-block">
@@ -70,7 +70,7 @@ export default function Footer(){
                         <h1 className="w-full text-2xl lg:text-left text-center my-5">
                             Mạng xã hội
                         </h1>
-                        <div className="flex justify-center">
+                        <div className="flex lg:justify-start justify-center">
                             <a 
                                 href="https://www.facebook.com/tranquockhang1810" 
                                 target="_blank" 
