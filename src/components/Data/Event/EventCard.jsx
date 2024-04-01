@@ -1,4 +1,3 @@
-// EventCard.jsx
 import { Card, Tooltip } from "antd";
 import { EnvironmentOutlined, ClockCircleOutlined, TagOutlined, EyeOutlined, DollarCircleOutlined } from '@ant-design/icons';
 

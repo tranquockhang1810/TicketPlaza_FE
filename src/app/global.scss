@@ -14,6 +14,22 @@ $color-font: #ffffff;
 
 $color-background: #D6A2A2;
 
+.primary-color {
+  color: $color-primary;
+}
+
+.primary-bg {
+  background-color: $color-primary;
+}
+
+.secondary-color {
+  color: $color-secondary;
+}
+
+.secondary-bg {
+  background-color: $color-secondary;
+}
+
 :root {
   margin: 0;
   padding: 0;
@@ -24,6 +40,10 @@ body{
   font-family: $main-font !important;
   font-weight: 400 ;
   background-color: $color-background;
+}
+
+.font-istok{
+  font-family: $main-font !important;
 }
 
 .bg-header {
@@ -90,7 +110,6 @@ body{
   border: 0 !important;
   background-color: $color-secondary !important;
   padding-left: 20px !important;
-  width: 380px !important;
   height: 60px !important;
   font-size: 18px !important;
   &::placeholder{

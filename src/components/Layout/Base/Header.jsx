@@ -1,6 +1,7 @@
 'use client'
 import { Dropdown, Menu, Input, Button, Space, Divider, Tooltip } from 'antd';
 import { GlobalOutlined, UserOutlined, SearchOutlined } from '@ant-design/icons';
+import { useUser } from '@/src/context/UserContext';
 import Headroom from 'react-headroom';
 import React, { useState } from 'react';
 
@@ -74,14 +75,21 @@ const MenuButton = ({ toggleMenu, showMenu }) => (
 );
 
 const MobileMenu = ({history}) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // const { 
+  //   profile, 
+  //   isAuthenticated,
+  //   onLogout
+  // } = useAuth();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const handleItemClick = ({ key }) => {
-    if (key === 'login') {
-      setIsLoggedIn(true);
-    } else if (key === 'logout') {
-      setIsLoggedIn(false);
+    if (key === 'logout') {
+      setIsAuthenticated(false);
+      signOut();
     } else {
+      if(key === "login"){
+        setIsAuthenticated(true);
+      }
       const path = '/' + key;
       history.push(path);
     }
@@ -96,7 +104,7 @@ const MobileMenu = ({history}) => {
     {
       key: 'login',
       children: null,
-      label: isLoggedIn ? 'TÀI KHOẢN' : 'ĐĂNG NHẬP / ĐĂNG KÝ',
+      label: isAuthenticated ? 'TÀI KHOẢN' : 'ĐĂNG NHẬP / ĐĂNG KÝ',
     },
     { key: 'events', icon: null, children: null, label: 'CÁC SỰ KIỆN' },
     { key: 'promotion', icon: null, children: null, label: 'KHUYẾN MÃI' },
@@ -104,7 +112,7 @@ const MobileMenu = ({history}) => {
   ];
   
 
-  if (isLoggedIn) {
+  if (isAuthenticated) {
     MobileItems[0].children = [
       { key: 'profile', icon: null, children: null, label: 'Thông tin' },
       { key: 'logout', icon: null, children: null, label: 'Đăng xuất' },
@@ -120,13 +128,17 @@ const MobileMenu = ({history}) => {
           onClick={handleItemClick}
           items={MobileItems}
         />
-        <Space.Compact className='w-full'>
+        <Space.Compact
+          className='w-full'
+          style={{width: "100%"}}
+        >
           <Input 
-            className='search-input'
+            className='search-input w-full'
             placeholder="Tìm kiếm tên sự kiện"
             onPressEnter={(e) => handleSearch(e.target.value)}
           />
           <Button 
+            style={{width: "100%"}}
             className='search-button flex items-center'
             icon={<SearchOutlined 
             style={{ fontSize: '20px', marginLeft: '15px' }} />}
@@ -140,16 +152,20 @@ const MobileMenu = ({history}) => {
 
 export default function Header({history}) {
   const [showMenu, setShowMenu] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const {
+    user,
+    onSignOut
+  } = useUser();
   const [language, setLanguage] = useState('VN');
 
   const handleLoginClick = () => {
-    setIsLoggedIn(true);
+    history.push("/login");
   };
   
   const handleAccountOptionClick = ({ key }) => {
     if (key === 'logout') {
-      setIsLoggedIn(false);
+      onSignOut();
+      history.push("/");
     } else {
       const path = '/' + key;
       history.push(path);
@@ -165,6 +181,7 @@ export default function Header({history}) {
     e.preventDefault();
     setShowMenu(!showMenu);
   };
+
 
   return (
     <nav>
@@ -203,7 +220,7 @@ export default function Header({history}) {
               >
                 <Space.Compact>
                   <Input 
-                    className='search-input'
+                    className='search-input w-[380px]'
                     placeholder="Tìm kiếm tên sự kiện"
                   />
                   <Button 
@@ -215,7 +232,7 @@ export default function Header({history}) {
               </div>
               {/* Login */}
               <div className='flex items-stretch'>
-                {isLoggedIn ? ( 
+                {user ? ( 
                   <Dropdown 
                     overlay={
                       <Menu 

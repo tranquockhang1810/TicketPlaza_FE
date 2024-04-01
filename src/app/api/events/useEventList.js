@@ -1,18 +1,23 @@
-'use client'
-import React,{useState, useEffect} from 'react';
-import { EventCard, EventCardSkeleton } from '../components/Data/Event';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
-export default function HomePage() {
-	const [loading, setLoading] = useState(true);
+export default function useEventsList(){
+
+    const [loading, setLoading] = useState(true);
     const [data, setData] = useState([]);
+    const router = useRouter();
+
+    const viewMoreEvents = () => {
+        router.push('/events');
+    }
 
     useEffect(() => {
         const fetchData = () => {
-            // Giả sử loadData() là hàm để lấy dữ liệu, bạn cần thay thế bằng hàm thực sự để lấy dữ liệu từ API
             const loadData = () => {
                 setTimeout(() => {
                     const newData = [
                         {
+                            _id: '1',
                             name: 'NHỮNG THÀNH PHỐ MƠ MÀNG SUMMER TOUR',
                             type: 'Âm nhạc',
                             time: '18:00',
@@ -39,6 +44,7 @@ export default function HomePage() {
                             ]
                         },
                         {
+                            _id: '2',
                             name: 'GEN FEST 2023',
                             type: 'Âm nhạc',
                             time: '13:00',
@@ -60,6 +66,7 @@ export default function HomePage() {
                             ]
                         },
                         {
+                            _id: '3',
                             name: 'NHỮNG THÀNH PHỐ MƠ MÀNG AUTUMN TOUR',
                             type: 'Âm nhạc',
                             time: '18:00',
@@ -76,6 +83,7 @@ export default function HomePage() {
                             ]
                         },
                         {
+                            _id: '4',
                             name: 'WORKSHOP TRANH HOA',
                             type: 'Nghệ thuật',
                             time: '18:00',
@@ -104,37 +112,14 @@ export default function HomePage() {
                     ];
                     setData(newData);
                     setLoading(false);
-                }, 3000); // 3 giây
+                }, 3000);
             };
-
+            
             loadData();
         };
 
         fetchData();
     }, []);
 
-  	return (
-        <section>
-            <div className='mx-auto p-6'>
-                <h1 className='section-header w-full my-2 text-4xl'>
-                    SỰ KIỆN HOT
-                </h1>
-                {loading ? (
-                    <div className="flex flex-wrap justify-center">
-                        {[...Array(4)].map((_, index) => (
-                            <EventCardSkeleton index={index}/>
-                        ))}
-                    </div>
-                ) : (
-                <div className='flex flex-wrap justify-center'>
-                    {data.map((event, index) => (
-                        <EventCard event={event} index={index}/>
-                    ))}
-                </div>
-                )}
-                <h4  className='section-header w-full my-2 text-xl hover:cursor-pointer hover:underline'>
-                    Xem thêm
-                </h4>
-            </div>
-        </section>
-)}
+    return { loading, data, viewMoreEvents };
+}
