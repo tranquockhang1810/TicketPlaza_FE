@@ -1,5 +1,5 @@
 'use client'
-import { Dropdown, Menu, Input, Button, Space, Divider, Tooltip } from 'antd';
+import { Dropdown, Menu, Input, Button, Space, Divider, Tooltip, message } from 'antd';
 import { GlobalOutlined, UserOutlined, SearchOutlined } from '@ant-design/icons';
 import { useUser } from '@/src/context/UserContext';
 import Headroom from 'react-headroom';
@@ -22,6 +22,7 @@ const HEADERS = [
 
 const AccountOptions = [
   { key: 'profile', label: 'Thông tin'},
+  { key: 'admin', label: 'Dành cho Admin' },
   { key: 'logout', label: 'Đăng xuất' }
 ];
 
@@ -75,21 +76,16 @@ const MenuButton = ({ toggleMenu, showMenu }) => (
 );
 
 const MobileMenu = ({history}) => {
-  // const { 
-  //   profile, 
-  //   isAuthenticated,
-  //   onLogout
-  // } = useAuth();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const {
+    onSignOut,
+    isAuthenticated
+  } = useUser();
 
   const handleItemClick = ({ key }) => {
     if (key === 'logout') {
-      setIsAuthenticated(false);
-      signOut();
+      onSignOut();
+      history.refresh();
     } else {
-      if(key === "login"){
-        setIsAuthenticated(true);
-      }
       const path = '/' + key;
       history.push(path);
     }
@@ -104,7 +100,7 @@ const MobileMenu = ({history}) => {
     {
       key: 'login',
       children: null,
-      label: isAuthenticated ? 'TÀI KHOẢN' : 'ĐĂNG NHẬP / ĐĂNG KÝ',
+      label: isAuthenticated() ? 'TÀI KHOẢN' : 'ĐĂNG NHẬP / ĐĂNG KÝ',
     },
     { key: 'events', icon: null, children: null, label: 'CÁC SỰ KIỆN' },
     { key: 'promotion', icon: null, children: null, label: 'KHUYẾN MÃI' },
@@ -112,7 +108,7 @@ const MobileMenu = ({history}) => {
   ];
   
 
-  if (isAuthenticated) {
+  if (isAuthenticated()) {
     MobileItems[0].children = [
       { key: 'profile', icon: null, children: null, label: 'Thông tin' },
       { key: 'logout', icon: null, children: null, label: 'Đăng xuất' },
@@ -153,7 +149,7 @@ const MobileMenu = ({history}) => {
 export default function Header({history}) {
   const [showMenu, setShowMenu] = useState(false);
   const {
-    user,
+    isAuthenticated,
     onSignOut
   } = useUser();
   const [language, setLanguage] = useState('VN');
@@ -165,7 +161,8 @@ export default function Header({history}) {
   const handleAccountOptionClick = ({ key }) => {
     if (key === 'logout') {
       onSignOut();
-      history.push("/");
+      message.success("Đăng xuất thành công!");
+      history.refresh();
     } else {
       const path = '/' + key;
       history.push(path);
@@ -181,7 +178,6 @@ export default function Header({history}) {
     e.preventDefault();
     setShowMenu(!showMenu);
   };
-
 
   return (
     <nav>
@@ -232,7 +228,7 @@ export default function Header({history}) {
               </div>
               {/* Login */}
               <div className='flex items-stretch'>
-                {user ? ( 
+                {isAuthenticated() ? ( 
                   <Dropdown 
                     overlay={
                       <Menu 
@@ -246,13 +242,13 @@ export default function Header({history}) {
                     } 
                     trigger={['hover']}
                   >
-                    <Button className='main-button flex items-center'>
+                    <Button className='main-button h-14 flex items-center'>
                       <UserOutlined style={{ fontSize: '20px' }} />
                       TÀI KHOẢN
                     </Button>
                   </Dropdown>
                 ) : (
-                  <Button className='main-button flex items-center' onClick={handleLoginClick}>
+                  <Button className='main-button h-14 flex items-center' onClick={handleLoginClick}>
                     <UserOutlined style={{ fontSize: '20px' }} />
                     ĐĂNG NHẬP / ĐĂNG KÝ
                   </Button>
@@ -271,7 +267,7 @@ export default function Header({history}) {
               }
               >
                 <Button
-                  className='main-button flex items-center'
+                  className='main-button h-14 flex items-center'
                   id='lang-btn'
                   icon={<GlobalOutlined style={{ fontSize: '20px'}}/>}
                   onClick={handleToggleLanguage}
@@ -296,7 +292,7 @@ export default function Header({history}) {
               {HEADERS.map((link) => (
                 <div
                   key={link.label}
-                  className='nav-button flex items-center ml-10 text-center'
+                  className='nav-button h-14 flex items-center ml-10 text-center'
                   onClick={() => history.push(link.path)}
                 >
                   {link.label}

@@ -13,8 +13,8 @@ const NotFound = () => {
       extra={
         <Button 
           type="primary" 
-          className='nav-button'
-          onClick={() => router.push('/')}
+          className='nav-button h-14'
+          onClick={() => router.back()}
         >
           Quay về
         </Button>

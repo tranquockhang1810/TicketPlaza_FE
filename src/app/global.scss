@@ -12,7 +12,10 @@ $color-secondary: #A83131;
 
 $color-font: #ffffff;
 
-$color-background: #D6A2A2;
+$color-background: rgb(231, 197, 197);
+
+// D6A2A2
+// e3b5b5
 
 .primary-color {
   color: $color-primary;
@@ -30,13 +33,18 @@ $color-background: #D6A2A2;
   background-color: $color-secondary;
 }
 
+.white-color {
+  color: $color-font !important;
+}
+
 :root {
   margin: 0;
   padding: 0;
   font-family: $main-font !important;
 }
 
-body{
+body,
+.defaut-bg {
   font-family: $main-font !important;
   font-weight: 400 ;
   background-color: $color-background;
@@ -57,7 +65,6 @@ body{
 }
 
 .main-button {
-  height: 60px;
   position: relative;
   background-color: $color-secondary;
   border: 0;
@@ -81,7 +88,6 @@ body{
 }
 
 .nav-button {
-  height: 60px;
   position: relative;
   background-color: $color-primary;
   border: 0;
@@ -189,6 +195,10 @@ body{
   }
 
   .ant-menu-item-selected{
+    background-color: $color-secondary !important;
+  }
+
+  .ant-menu-sub{
     background-color: $color-primary !important;
   }
 }
@@ -223,12 +233,13 @@ body{
 .ant-card{
   max-width: 320px;
   margin: 12px;
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.3) !important;
   font-family: $main-font !important;
   background-color: $color-secondary !important;
   color: $color-font;
 
   &:hover{
-    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.5) !important;
     background-color: $color-primary !important;
 
     .ant-card-actions{
@@ -249,5 +260,40 @@ body{
         }
       }
     }
+  }
+}
+
+.ant-pagination {
+  .ant-pagination-next button span,
+  .ant-pagination-prev button span{
+    color: $color-font !important;
+  }
+
+  .ant-pagination-item-active{
+    background-color: $color-secondary !important;
+    border-color: $color-secondary !important;
+  }
+
+  .ant-pagination-item a{
+    color: $color-font !important;
+  }
+}
+
+.datePicker-text-right input,
+.inputNumber-text-right .ant-input-number-input{
+  text-align: right;
+}
+
+.right-align-photo .ant-form-item-control-input-content{
+  display: flex;
+  justify-content: right;
+}
+
+.custom-upload{
+  .ant-upload{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
   }
 }

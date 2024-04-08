@@ -1,9 +1,70 @@
 'use client'
+import api from '@/src/app/api/api';
 import { EventCard, EventCardSkeleton } from '../../Data/Event';
-import useEventsList from '@/src/app/api/events/useEventList';
-
+import { useRouter, usePathname } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import ApiPath from '@/src/app/api/apiPath';
+import { message } from 'antd';
+ 
 export default function EventsSection() {
-	const {loading, data, viewMoreEvents} = useEventsList();
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState([]);
+  const [typeList, setTypeList] = useState([]);
+  const router = useRouter();
+  const path = usePathname();
+
+  const viewMoreEvents = () => {
+    if(path === '/events') {
+      
+      return;
+    }
+    router.push('/events');
+  }
+
+  const getEventTypeList = async () => {
+    try {
+      setLoading(true);
+      const params = {
+        page: 1,
+        limit: 10000,
+        status: 0
+      }
+      const res = await api.get(ApiPath.GET_EVENT_TYPE_LIST, { params });
+      if (!!res?.data) {
+        setTypeList(res?.data[0].data);
+      } else {
+        message.error( res?.error?.message|| "Đã có lỗi xảy ra! Vui lòng thử lại!");
+      }
+    } catch (error) {
+      console.error(error);
+      message.error("Đã có lỗi xảy ra! Vui lòng thử lại!");
+    } finally {
+      setLoading(false)
+    }
+  };
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const params = { sort: "view", ticket: true, status: 0}
+      const res = await api.get(ApiPath.GET_EVENT_LIST, { params });
+      if(!!res?.data) {
+        setData(res?.data[0].data);
+      } else {
+        message.error( res?.error?.message|| "Đã có lỗi xảy ra! Vui lòng thử lại!");
+      }
+    } catch (error) {
+      console.error(error);
+      message.error("Đã có lỗi xảy ra! Vui lòng thử lại!");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getEventTypeList(),
+    fetchData();
+  }, []);
 
   return (
     <section>
@@ -13,14 +74,14 @@ export default function EventsSection() {
         </h1>
         {loading ? (
           <div className="flex flex-wrap justify-center">
-            {[...Array(4)].map((_, index) => (
+            {[...Array(8)].map((_, index) => (
               <EventCardSkeleton key={index}/>
             ))}
           </div>
         ) : (
         <div className='flex flex-wrap justify-center'>
-          {data.map((event) => (
-            <EventCard event={event} key={event._id}/>
+          {data.map((data) => (
+            <EventCard event={data?.event} tickets={data?.tickets} typeList={typeList} key={data?.event._id}/>
           ))}
         </div>
         )}
