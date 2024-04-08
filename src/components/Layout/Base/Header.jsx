@@ -84,11 +84,18 @@ const MobileMenu = ({history}) => {
   const handleItemClick = ({ key }) => {
     if (key === 'logout') {
       onSignOut();
+      message.success("Đăng xuất thành công!");
       history.refresh();
-    } else {
-      const path = '/' + key;
-      history.push(path);
+      return;
     }
+  
+    if (key === 'admin' && !isAdmin()) {
+      message.info("Mục này chỉ dành cho tài khoản admin!");
+      return;
+    }
+  
+    const path = '/' + key;
+    history.push(path);
   };
 
   const handleSearch = (value) => {
@@ -150,7 +157,8 @@ export default function Header({history}) {
   const [showMenu, setShowMenu] = useState(false);
   const {
     isAuthenticated,
-    onSignOut
+    onSignOut,
+    isAdmin
   } = useUser();
   const [language, setLanguage] = useState('VN');
 
@@ -163,11 +171,18 @@ export default function Header({history}) {
       onSignOut();
       message.success("Đăng xuất thành công!");
       history.refresh();
-    } else {
-      const path = '/' + key;
-      history.push(path);
+      return;
     }
+  
+    if (key === 'admin' && !isAdmin()) {
+      message.info("Mục này chỉ dành cho tài khoản admin!");
+      return;
+    }
+  
+    const path = '/' + key;
+    history.push(path);
   };
+  
   
   const handleToggleLanguage = () => {
       const newLanguage = language === 'VN' ? 'EN' : 'VN';

@@ -7,7 +7,7 @@ import ImgCrop from 'antd-img-crop';
 import { useEffect, useState } from "react";
 import confirm from "antd/es/modal/confirm";
 import { colorTextDisplay, getItemWithColor } from "@/src/utils/DisplayHelper";
-import { DateTimeFormat, DateFormat } from "@/src/utils/DateFormatter";
+import { DateTimeFormat, DateFormat, dateWithUct } from "@/src/utils/DateFormatter";
 import dayjs from 'dayjs';
 
 export default function Tab01({
@@ -37,16 +37,23 @@ export default function Tab01({
       form.validateFields().then(async () => {
         try {
           setLoading(true);
+          const { name, type, place, dateSingle, dateRange, description, dateType } = form.getFieldsValue();
           const body = {
-            typeId: form.getFieldValue("typeId") === "" ? undefined : form.getFieldValue("typeId"),
-            eventTypeName: form.getFieldValue("eventTypeName") === "" ? undefined : form.getFieldValue("eventTypeName"),
+            name: name !== "" ? name : undefined,
+            type: type !== "" ? type : undefined,
+            place: place !== "" ? place : undefined,
+            date: dateType === "single" ? dateWithUct(dateSingle) : dateWithUct(dateRange[0]),
+            durationDate: dateType === "range" ? dateRange[1].diff(dateRange[0], 'day') : 0,
+            description: description !== "" ? description : undefined,
+            photo: selectedImage !== null ? selectedImage : undefined,
           };
+
+          console.log(body);
           const params = { eventId: record?._id };
-          const res = await api.patch(ApiPath.UPDATE_EVENT_TYPE, body, { params });
+          const res = await api.patch(ApiPath.UPDATE_EVENT, body, { params });
           if(!!res?.data) {
             message.success(res?.message);
             await getEvents();
-            setIsDisable(true);
             setShowModal(false);
           } else {
             message.error(res?.error?.message || "Đã có lỗi xảy ra! Vui lòng thử lại!");
@@ -135,78 +142,102 @@ export default function Tab01({
         >
           <Input className="text-right"  readOnly={isDisable}/>
         </Form.Item>
-        {!isDisable && (
+        {/* Hiển thị Date */}
+        {isDisable && (
           <Form.Item
-            label={<span className="font-bold">Kéo dài</span>}
-            name="dateType"
-            initialValue={dateType}
-            rules={[{ required: !isDisable, message: "Vui lòng chọn loại ngày" }]}
+            label={<span className="font-bold">Thời gian</span>}
+            name="date"
+            initialValue={
+              record?.durationDate > 0
+                ? [dayjs(record?.date), dayjs(record?.date).add(record?.durationDate, 'day')]
+                : dayjs(record?.date)
+            }          
+            rules={[{ required: !isDisable, message: 'Vui lòng nhập thời gian' }]}
           >
-            <Select onChange={(value) => setDateType(value)} className="text-right">
-              <Select.Option value="single">Trong ngày</Select.Option>
-              <Select.Option value="range">Khoảng thời gian</Select.Option>
-            </Select>
+            {isDisable && (
+              record?.durationDate > 0 ? (
+                <DatePicker.RangePicker
+                  className="w-full datePicker-text-right"
+                  suffixIcon={undefined}
+                  inputReadOnly={isDisable}
+                  readOnly={isDisable}
+                  allowClear={false}
+                  format={DateFormat}
+                  allowEmpty={false}
+                />
+              ) : (
+                <DatePicker
+                  className="w-full datePicker-text-right"
+                  suffixIcon={undefined}
+                  showTime
+                  needConfirm={false}
+                  showNow={false}
+                  inputReadOnly={isDisable}
+                  readOnly={isDisable}
+                  allowClear={false}
+                  allowEmpty={false}
+                  format={DateTimeFormat}
+                />
+              )
+            )}
           </Form.Item>
         )}
-        <Form.Item
-          label={<span className="font-bold">Thời gian</span>}
-          name="date"
-          initialValue={
-            record?.durationDate > 0
-              ? [dayjs(record?.date), dayjs(record?.date).add(record?.durationDate, 'day')]
-              : dayjs(record?.date)
-          }
-          rules={[{ required: !isDisable, message: 'Vui lòng nhập thời gian' }]}
-        >
-          {isDisable ? (
-            record?.durationDate > 0 ? (
-              <DatePicker.RangePicker
-                className="w-full datePicker-text-right"
-                suffixIcon={undefined}
-                inputReadOnly={isDisable}
-                readOnly={isDisable}
-                allowClear={false}
-                format={DateFormat}
-              />
-            ) : (
-              <DatePicker
-                className="w-full datePicker-text-right"
-                suffixIcon={undefined}
-                showTime
-                needConfirm={false}
-                showNow={false}
-                inputReadOnly={isDisable}
-                readOnly={isDisable}
-                allowClear={false}
-                format={DateTimeFormat}
-              />
-            )
-          ) : (
-            dateType === 'range' ? (
-              <DatePicker.RangePicker
-                className="w-full datePicker-text-right"
-                suffixIcon={undefined}
-                inputReadOnly={isDisable}
-                readOnly={isDisable}
-                allowClear={false}
-                format={DateFormat}
-              />
-            ) : (
-              <DatePicker
-                className="w-full datePicker-text-right"
-                suffixIcon={undefined}
-                showTime
-                needConfirm={false}
-                showNow={false}
-                inputReadOnly={isDisable}
-                readOnly={isDisable}
-                allowClear={false}
-                format={DateTimeFormat}
-              />
-            )
-          )}
-        </Form.Item>
-
+        {/* Chỉnh sửa date */}
+        {!isDisable && (
+          <>
+            <Form.Item
+              label={<span className="font-bold">Kéo dài</span>}
+              name="dateType"
+              rules={[{ required: !isDisable, message: "Vui lòng chọn loại ngày" }]}
+              initialValue={dateType}
+            >
+              <Select 
+                onChange={(value) => { setDateType(value) }} 
+                className="text-right">
+                <Select.Option value="single">Trong ngày</Select.Option>
+                <Select.Option value="range">Khoảng thời gian</Select.Option>
+              </Select>
+            </Form.Item>
+            {dateType === 'range' && (
+              <Form.Item
+                label={<span className="font-bold">Khoảng thời gian</span>}
+                name='dateRange'
+                rules={[{ required: true, message: "Vui lòng chọn ngày" }]}
+                initialValue={form.getFieldValue('date')}
+              >
+                  <DatePicker.RangePicker
+                    className="w-full datePicker-text-right"
+                    suffixIcon={undefined}
+                    inputReadOnly={isDisable}
+                    readOnly={isDisable}
+                    allowClear={false}
+                    format={DateFormat}
+                  />
+              </Form.Item>
+            )}
+            {dateType === 'single' && (
+              <Form.Item
+                label={<span className="font-bold">Thời gian</span>}
+                name='dateSingle'
+                rules={[{ required: true, message: "Vui lòng chọn ngày" }]}
+                initialValue={form.getFieldValue('date')}
+              >
+                <DatePicker
+                  className="w-full datePicker-text-right"
+                  suffixIcon={undefined}
+                  showTime
+                  needConfirm={false}
+                  showNow={false}
+                  inputReadOnly={isDisable}
+                  readOnly={isDisable}
+                  allowClear={false}
+                  format={DateTimeFormat}
+                />
+              </Form.Item>
+            )}
+          </>
+        )}
+        
         {/* <Form.Item
           label={<span className="font-bold">Số vé tối đa mỗi hóa đơn</span>}
           name="maxTicketPerBill"
@@ -227,6 +258,7 @@ export default function Tab01({
           name="photo"
           initialValue={`../images/${record?.photo}`}
           className="right-align-photo"
+          rules={[{ required: !isDisable , message: "Vui lòng chọn hình ảnh"}]}
         >
           {isDisable ? (
             <Image src={`../images/${record?.photo}`} width={200} height={200} />
@@ -236,7 +268,6 @@ export default function Tab01({
               <ImgCrop rotationSlider>
                 <Upload
                   beforeUpload={(file) => {
-                    console.log(file);
                     setSelectedImage(file);
                     return false;
                   }}

@@ -12,6 +12,10 @@ export const formatRangeDate = ( item, record) => {
   return formatDate(record?.date, DateTimeFormat)
 }
 
+export const dateWithUct = (date) => {
+  return dayjs(date).format('YYYY-MM-DDTHH:mm:ss.SSSZ')
+};
+
 export const DateTimeFormat = "DD/MM/YYYY | HH:mm";
 
 export const DateFormat = 'DD/MM/YYYY';
