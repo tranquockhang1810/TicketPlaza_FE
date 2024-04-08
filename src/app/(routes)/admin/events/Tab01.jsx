@@ -7,7 +7,7 @@ import ImgCrop from 'antd-img-crop';
 import { useEffect, useState } from "react";
 import confirm from "antd/es/modal/confirm";
 import { colorTextDisplay, getItemWithColor } from "@/src/utils/DisplayHelper";
-import { DateTimeFormat, DateFormat, dateWithUct } from "@/src/utils/DateFormatter";
+import { DateTimeFormat, DateFormat, dateWithUct, getDiffDate } from "@/src/utils/DateFormatter";
 import dayjs from 'dayjs';
 
 export default function Tab01({
@@ -42,12 +42,12 @@ export default function Tab01({
             name: name !== "" ? name : undefined,
             type: type !== "" ? type : undefined,
             place: place !== "" ? place : undefined,
-            date: dateType === "single" ? dateWithUct(dateSingle) : dateWithUct(dateRange[0]),
-            durationDate: dateType === "range" ? dateRange[1].diff(dateRange[0], 'day') : 0,
+            date: dateType === "single" ? dateWithUct(dateSingle, dateType) : dateWithUct(dateRange[0], dateType),
+            durationDate: dateType === "range" ? getDiffDate(dateRange[0], dateRange[1]) : 0,
             description: description !== "" ? description : undefined,
             photo: selectedImage !== null ? selectedImage : undefined,
           };
-
+          
           console.log(body);
           const params = { eventId: record?._id };
           const res = await api.patch(ApiPath.UPDATE_EVENT, body, { params });

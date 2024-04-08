@@ -12,9 +12,24 @@ export const formatRangeDate = ( item, record) => {
   return formatDate(record?.date, DateTimeFormat)
 }
 
-export const dateWithUct = (date) => {
+export const dateWithUct = (date, dataType) => {
+  if(dataType === 'range') {
+    const formattedDate = dayjs(date).startOf('day');
+    return formattedDate.format('YYYY-MM-DDTHH:mm:ss.SSSZ');
+  }
+  if(Array.isArray(date)) {
+    const formattedDate = dayjs(date[0]).startOf('day');
+    return formattedDate.format('YYYY-MM-DDTHH:mm:ss.SSSZ');
+  }
   return dayjs(date).format('YYYY-MM-DDTHH:mm:ss.SSSZ')
 };
+
+export const getDiffDate = (start, end) => {
+  const startDate = dayjs(start).startOf('day');
+  const endDate = dayjs(end).startOf('day'); 
+  return endDate.diff(startDate, 'day');
+}
+
 
 export const DateTimeFormat = "DD/MM/YYYY | HH:mm";
 

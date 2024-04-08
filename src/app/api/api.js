@@ -26,12 +26,6 @@ api.interceptors.response.use(
   },
   (error) => {
       console.log(error)
-      if(error?.response?.status === 403){
-          if(!!localStorage.getItem("token")) {
-              localStorage.removeItem('token');
-              window.location.href = '/sign-in'; //relative to domain
-          }
-      };
       return Promise.resolve(error?.response?.data);
   }
 );
