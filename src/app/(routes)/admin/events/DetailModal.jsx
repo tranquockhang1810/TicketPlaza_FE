@@ -3,6 +3,7 @@ import {useState} from 'react'
 import { Modal, Tabs } from "antd";
 import { AppstoreOutlined, TagOutlined, TeamOutlined, MessageOutlined} from '@ant-design/icons'
 import Tab01 from "./Tab01";
+import Tab02 from './Tab02';
 
 const { TabPane } = Tabs;
 
@@ -14,16 +15,10 @@ const EventModal = ({
   statusList,
   typeList
 }) => {
-  const [modalSize, setShowModalSize] = useState();
   const [activeTab, setActiveTab] = useState('1');
 
   const handleTabChange = (key) => {
     setActiveTab(key);
-    if (key === '1') {
-      setShowModalSize();
-    } else {
-      setShowModalSize(1000);
-    }
   };
 
   return (
@@ -35,9 +30,8 @@ const EventModal = ({
       title={<span className="text-xl font-bold">Thông tin chi tiết</span>}
       onCancel={() => setShowModal(false)}
       footer={null}
-      width={modalSize ? 1000 : 'auto'}
     >
-      <Tabs defaultActiveKey="1" activeKey={activeTab} onChange={handleTabChange}>
+      <Tabs defaultActiveKey="1" activeKey={activeTab} onChange={handleTabChange} indicator={{align: 'center'}} >
         <TabPane tab="Thông tin sự kiện" key="1" icon={<AppstoreOutlined/>}>
           <Tab01 
             record={record}
@@ -49,7 +43,10 @@ const EventModal = ({
           />
         </TabPane>
         <TabPane tab="Vé" key="2" icon={<TagOutlined/>}>
-          {/* Thêm nội dung cho tab thứ 2 nếu cần */}
+          <Tab02
+            record={record}
+            showModal={showModal}
+          />
         </TabPane>
         <TabPane tab="Thành viên" key="3" icon={<TeamOutlined />}>
           {/* Thêm nội dung cho tab thứ 3 nếu cần */}

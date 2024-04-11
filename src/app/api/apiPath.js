@@ -15,9 +15,17 @@ export const ApiPath = {
 
   //Event
   GET_EVENT_LIST: getDefaultPath('events'),
+  UPLOAD_IMAGE: getDefaultPath('events/upload'),
   DEACTIVATE_EVENT:getDefaultPath('events/deactivateEvent'),
   ACTIVATE_EVENT: getDefaultPath('events/activateEvent'),
   UPDATE_EVENT: getDefaultPath('events/updateEvent'),
+
+  //Ticket
+  GET_TICKETS: getDefaultPath('tickets'),
+  UPDATE_TICKET: getDefaultPath('tickets/updateTicket'),
+  DEACTIVATE_TICKET: getDefaultPath('tickets/deactivateTicket'),
+  ACTIVATE_TICKET: getDefaultPath('tickets/activateTicket'),
+  ADD_TICKET: getDefaultPath('tickets'),
 };
 
 function getDefaultPath(path) {

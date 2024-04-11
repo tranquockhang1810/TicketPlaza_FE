@@ -2,7 +2,7 @@
 import { useUser } from "@/src/context/UserContext"
 import { useRouter } from 'next/navigation';
 import { Result, Button, Layout } from "antd";
-import SideNav from "@/src/components/Layout/common/SideNav";
+import SideNav from "@/src/components/Common/SideNav";
 import Sider from "antd/es/layout/Sider";
 import { Content } from "antd/es/layout/layout";
 

@@ -33,7 +33,7 @@ export default function EventCard({ event, tickets, typeList }) {
         bordered={false}
         cover={<img className="transition-transform duration-300 transform scale-100 group-hover:scale-110" alt="eventImg" src={`/images/${event?.photo}`} />}
         actions={[<span>MUA VÉ NGAY</span>]}
-        className="w-[320px]"
+        className="w-[320px] event-card"
     >
       <Tooltip title={event?.name} placement="topLeft" arrow={false}>
         <h1 className='font-bold text-base truncate'>{event?.name}</h1>

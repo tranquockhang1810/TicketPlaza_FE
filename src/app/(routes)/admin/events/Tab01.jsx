@@ -1,7 +1,7 @@
 'use client'
 import api from "@/src/app/api/api";
 import ApiPath from "@/src/app/api/apiPath";
-import { Button, Form, Input, message, DatePicker, Select, Image, Upload } from "antd";
+import { Button, Form, Input,InputNumber, message, DatePicker, Select, Image, Upload } from "antd";
 import { UploadOutlined } from '@ant-design/icons'
 import ImgCrop from 'antd-img-crop';
 import { useEffect, useState } from "react";
@@ -22,6 +22,7 @@ export default function Tab01({
   const [isDisable, setIsDisable] = useState(true);
   const [loading, setLoading] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [imgBase64String, setImgBase64String] = useState("");
   const [dateType, setDateType] = useState("");
 
   const RenderStatus = (status) => {
@@ -29,42 +30,58 @@ export default function Tab01({
     return colorTextDisplay(title, color);
   }
 
-  const handleSubmitButton = () => {
-    if(isDisable){
-      setIsDisable(false);
-    } 
-    else {
-      form.validateFields().then(async () => {
-        try {
-          setLoading(true);
-          const { name, type, place, dateSingle, dateRange, description, dateType } = form.getFieldsValue();
-          const body = {
-            name: name !== "" ? name : undefined,
-            type: type !== "" ? type : undefined,
-            place: place !== "" ? place : undefined,
-            date: dateType === "single" ? dateWithUct(dateSingle, dateType) : dateWithUct(dateRange[0], dateType),
-            durationDate: dateType === "range" ? getDiffDate(dateRange[0], dateRange[1]) : 0,
-            description: description !== "" ? description : undefined,
-            photo: selectedImage !== null ? selectedImage : undefined,
-          };
-          
-          console.log(body);
-          const params = { eventId: record?._id };
-          const res = await api.patch(ApiPath.UPDATE_EVENT, body, { params });
-          if(!!res?.data) {
-            message.success(res?.message);
-            await getEvents();
-            setShowModal(false);
-          } else {
-            message.error(res?.error?.message || "Đã có lỗi xảy ra! Vui lòng thử lại!");
-          }
-        } catch (error) {
-          console.error(error);
-          message.error("Đã có lỗi xảy ra! Vui lòng thử lại!");
-        } finally {
-          setLoading(false);
-        }
-      })
+  // const UploadImg = async (fileStr) => {
+  //   try {
+  //     setLoading(true)
+  //     const body = {
+  //       data: fileStr
+  //     }
+  //     const res = await api.post(ApiPath.UPLOAD_IMAGE, body );
+  //     if(res){
+  //       return res?.url;
+  //     } else {
+  //       message.error(res?.error?.message || "Đã có lỗi xảy ra! Vui lòng thử lại!");
+  //       return;
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //     message.error("Đã có lỗi xảy ra khi tải hình! Vui lòng thử lại!");
+  //     return;
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // }
+
+  const handleSubmitButton = async () => {
+    try {
+      await form.validateFields();
+      setLoading(true);
+      const { name, type, place, dateSingle, dateRange, description, dateType, maxTicketPerBill } = form.getFieldsValue();
+      const body = {
+        name: name !== "" ? name : undefined,
+        type: type !== "" ? type : undefined,
+        place: place !== "" ? place : undefined,
+        date: dateType === "single" ? dateWithUct(dateSingle, dateType) : dateWithUct(dateRange[0], dateType),
+        durationDate: dateType === "range" ? getDiffDate(dateRange[0], dateRange[1]) : 0,
+        description: description !== "" ? description : undefined,
+        photo: imgBase64String !== "" ? imgBase64String : undefined,
+        maxTicketPerBill: maxTicketPerBill,
+      };
+      console.log("body>>>>>",body)
+      const params = { eventId: record?._id };
+      const res = await api.patch(ApiPath.UPDATE_EVENT, body, { params });
+      if (!!res?.data) {
+        message.success(res?.message);
+        await getEvents();
+        setShowModal(false);
+      } else {
+        message.error(res?.error?.message || "Đã có lỗi xảy ra! Vui lòng thử lại!");
+      }
+    } catch (error) {
+      console.error(error);
+      message.error("Đã có lỗi xảy ra! Vui lòng thử lại!");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -105,6 +122,21 @@ export default function Tab01({
     setSelectedImage(null);
     setDateType(record?.durationDate === 0 ? "single" : "range")
     setIsDisable(true);
+  }
+
+  function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+      if (!file || !file instanceof File) {
+          reject(new Error('Invalid file'));
+          return;
+      }
+      const reader = new FileReader();
+      reader.onload = function(event) {
+          const base64String = event.target.result;
+          resolve(base64String);
+      };
+      reader.readAsDataURL(file);
+    });
   }
 
   useEffect(() => {
@@ -237,15 +269,14 @@ export default function Tab01({
             )}
           </>
         )}
-        
-        {/* <Form.Item
+        <Form.Item
           label={<span className="font-bold">Số vé tối đa mỗi hóa đơn</span>}
           name="maxTicketPerBill"
           initialValue={record?.maxTicketPerBill}
           rules={[{ required: !isDisable, message: "Vui lòng nhập số vé tối đa" }]}
         >
-          <InputNumber controls={false} className="w-full inputNumber-text-right" readOnly={isDisable}/>
-        </Form.Item> */}
+          <InputNumber min={1} controls={false} className="w-full inputNumber-text-right" readOnly={isDisable}/>
+        </Form.Item>
         <Form.Item
           label={<span className="font-bold">Mô tả</span>}
           name="description"
@@ -256,21 +287,25 @@ export default function Tab01({
         <Form.Item
           label={<span className="font-bold">Hình ảnh</span>}
           name="photo"
-          initialValue={`../images/${record?.photo}`}
           className="right-align-photo"
-          rules={[{ required: !isDisable , message: "Vui lòng chọn hình ảnh"}]}
         >
           {isDisable ? (
-            <Image src={`../images/${record?.photo}`} width={200} height={200} />
+            <Image src={record?.photo} width={200} height={200} />
           ) : (
             <div>
-              <Image src={selectedImage ? URL.createObjectURL(selectedImage) : `../images/${record?.photo}`} width={200} height={200} />
+              <Image src={selectedImage ? URL.createObjectURL(selectedImage) : record?.photo} width={200} height={200} />
               <ImgCrop rotationSlider>
                 <Upload
-                  beforeUpload={(file) => {
-                    setSelectedImage(file);
+                  beforeUpload={async (file) => {
+                    try {
+                        const base64String = await fileToBase64(file);
+                        setSelectedImage(file);
+                        setImgBase64String(base64String);
+                    } catch (error) {
+                        console.error('Error:', error);
+                    }
                     return false;
-                  }}
+                }}
                   showUploadList={false}
                   className="custom-upload"
                   action={null}
@@ -283,6 +318,7 @@ export default function Tab01({
             </div>
           )}
         </Form.Item>
+
 
         {isDisable && (
           <div className="flex justify-between text-base">
@@ -310,11 +346,20 @@ export default function Tab01({
             Hủy
           </Button>
         )}
-        <Button type="primary" loading={loading} className="nav-button ml-2" 
-          onClick={handleSubmitButton}
-        >
-          {isDisable ? "Chỉnh sửa" : "Lưu"}
-        </Button>
+        {isDisable ? (
+          <Button type="primary" loading={loading} className="nav-button ml-2" 
+            onClick={()=> setIsDisable(false)}
+          >
+            Chỉnh sửa
+          </Button>
+        ) : (
+          <Button type="primary" loading={loading} className="nav-button ml-2" 
+            onClick={handleSubmitButton}
+          >
+            Lưu
+          </Button>
+        )}
+        
       </div>
     </>
   )

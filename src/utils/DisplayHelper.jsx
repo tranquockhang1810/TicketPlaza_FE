@@ -1,8 +1,19 @@
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Button } from "antd";
 
-export function CurrencyDisplay (text) {
-  return <span>{`${new Intl.NumberFormat().format(text)} VNĐ`}</span>;
+export function CurrencyDisplay (value) {
+  let stringValue = `${value}`;
+  let formattedIntegerPart = stringValue.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return `${formattedIntegerPart}`;
+};
+
+export function convertStringToNumber(value) {
+  if (!isNaN(value)) {
+    return Number(value);
+  }
+  const numberString = value.replace(/,/g, '');
+  const number = parseInt(numberString, 10); 
+  return number;
 }
 
 export function colorTextDisplay (value, color) {
