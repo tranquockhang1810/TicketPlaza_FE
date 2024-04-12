@@ -45,11 +45,9 @@ export default function Login() {
 			if(!!res?.data) {
 				message.success(res?.message);
         onSignIn(res?.data[0]);
-        if (res?.data[0].data?.type !== 0) {
-          message.info("Tài khoản admin");
-          //router.push("/admin");
-        };
-        router.push("/");
+        if (res?.data[0]?.data?.type !== 0) {
+          router.push("/admin");
+        } else router.push("/");
       } else {
         message.error(res?.error?.message);
       }
@@ -107,6 +105,7 @@ export default function Login() {
             <div className="flex justify-end mb-2">
               <span
                 className="text-white hover:font-bold hover:underline hover:cursor-pointer"
+                onClick={() => router.push('/forgot-password')}
               >
                 Quên mật khẩu?
               </span>

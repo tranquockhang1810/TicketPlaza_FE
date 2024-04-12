@@ -24,8 +24,8 @@ export const UserProvider = ({ children }) => {
         console.error("Error fetching user data:", error);
       }
     };
-
-    fetchUserData();
+    if(!!localStorage.getItem("token"))
+      fetchUserData();
   }, []);
 
   const onSignIn = (userData) => {

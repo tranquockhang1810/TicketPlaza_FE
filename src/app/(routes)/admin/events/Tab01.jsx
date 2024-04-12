@@ -9,6 +9,7 @@ import confirm from "antd/es/modal/confirm";
 import { colorTextDisplay, getItemWithColor } from "@/src/utils/DisplayHelper";
 import { DateTimeFormat, DateFormat, dateWithUct, getDiffDate } from "@/src/utils/DateFormatter";
 import dayjs from 'dayjs';
+import { useUser } from "@/src/context/UserContext";
 
 export default function Tab01({
   record,
@@ -16,41 +17,21 @@ export default function Tab01({
   setShowModal,
   typeList,
   getEvents,
-  statusList
+  statusList,
+  forCreate,
 }) {
   const [form] = Form.useForm();
-  const [isDisable, setIsDisable] = useState(true);
+  const [isDisable, setIsDisable] = useState(!forCreate);
   const [loading, setLoading] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [imgBase64String, setImgBase64String] = useState("");
   const [dateType, setDateType] = useState("");
+  const { user } = useUser();
 
   const RenderStatus = (status) => {
     const {title, color} = getItemWithColor(statusList,status);
     return colorTextDisplay(title, color);
   }
-
-  // const UploadImg = async (fileStr) => {
-  //   try {
-  //     setLoading(true)
-  //     const body = {
-  //       data: fileStr
-  //     }
-  //     const res = await api.post(ApiPath.UPLOAD_IMAGE, body );
-  //     if(res){
-  //       return res?.url;
-  //     } else {
-  //       message.error(res?.error?.message || "Đã có lỗi xảy ra! Vui lòng thử lại!");
-  //       return;
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //     message.error("Đã có lỗi xảy ra khi tải hình! Vui lòng thử lại!");
-  //     return;
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // }
 
   const handleSubmitButton = async () => {
     try {
@@ -58,6 +39,7 @@ export default function Tab01({
       setLoading(true);
       const { name, type, place, dateSingle, dateRange, description, dateType, maxTicketPerBill } = form.getFieldsValue();
       const body = {
+        host: forCreate ? user?._id : undefined,
         name: name !== "" ? name : undefined,
         type: type !== "" ? type : undefined,
         place: place !== "" ? place : undefined,
@@ -67,9 +49,13 @@ export default function Tab01({
         photo: imgBase64String !== "" ? imgBase64String : undefined,
         maxTicketPerBill: maxTicketPerBill,
       };
-      console.log("body>>>>>",body)
       const params = { eventId: record?._id };
-      const res = await api.patch(ApiPath.UPDATE_EVENT, body, { params });
+      let res = "";
+      if(forCreate) {
+        res = await api.post(ApiPath.CREATE_EVENT, body);
+      } else {
+        res = await api.patch(ApiPath.UPDATE_EVENT, body, { params });
+      }
       if (!!res?.data) {
         message.success(res?.message);
         await getEvents();
@@ -121,7 +107,7 @@ export default function Tab01({
     form.resetFields();
     setSelectedImage(null);
     setDateType(record?.durationDate === 0 ? "single" : "range")
-    setIsDisable(true);
+    setIsDisable(!forCreate);
   }
 
   function fileToBase64(file) {
@@ -146,6 +132,7 @@ export default function Tab01({
   return (
     <>
       <Form layout="horizontal" form={form} variant={isDisable ? "borderless" : "outlined"}>
+        {/* Tên sk */}
         <Form.Item
           label={<span className="font-bold">Tên sự kiện</span>}
           name="name"
@@ -154,6 +141,7 @@ export default function Tab01({
         >
           <Input className="text-right" readOnly={isDisable}/>
         </Form.Item>
+        {/* Thể loại */}
         <Form.Item
           label={<span className="font-bold">Thể loại</span>}
           name="type"
@@ -166,6 +154,7 @@ export default function Tab01({
             style={{ pointerEvents: isDisable ? 'none' : 'auto' }}
           />
         </Form.Item>
+        {/* Địa chỉ */}
         <Form.Item
           label={<span className="font-bold">Địa chỉ</span>}
           name="place"
@@ -185,6 +174,7 @@ export default function Tab01({
                 : dayjs(record?.date)
             }          
             rules={[{ required: !isDisable, message: 'Vui lòng nhập thời gian' }]}
+            style={{pointerEvents: 'none'}}
           >
             {isDisable && (
               record?.durationDate > 0 ? (
@@ -244,6 +234,7 @@ export default function Tab01({
                     readOnly={isDisable}
                     allowClear={false}
                     format={DateFormat}
+                    disabledDate={(current) => current && current < dayjs().startOf('day')}
                   />
               </Form.Item>
             )}
@@ -264,11 +255,20 @@ export default function Tab01({
                   readOnly={isDisable}
                   allowClear={false}
                   format={DateTimeFormat}
+                  disabledDate={(current) => current && current < dayjs().startOf('day')}
+                  disabledTime={(current) => {
+                    if (current && current.isSame(dayjs(), 'day')) {
+                        return {
+                            disabledHours: () => [...Array(dayjs().hour() + 1).keys()]
+                        };
+                    }
+                  }}
                 />
               </Form.Item>
             )}
           </>
         )}
+        {/* Số vé mỗi hóa đơn */}
         <Form.Item
           label={<span className="font-bold">Số vé tối đa mỗi hóa đơn</span>}
           name="maxTicketPerBill"
@@ -277,17 +277,23 @@ export default function Tab01({
         >
           <InputNumber min={1} controls={false} className="w-full inputNumber-text-right" readOnly={isDisable}/>
         </Form.Item>
+        {/* Mô tả */}
         <Form.Item
           label={<span className="font-bold">Mô tả</span>}
           name="description"
           initialValue={record?.description}
+          rules={[
+            {required: forCreate, message: "Vui lòng nhập mô tả!"}
+          ]}
         >
-          <Input.TextArea className="w-full text-right" autoSize={{ minRows: 1, maxRows: 20 }} readOnly={isDisable}/>
+          <Input.TextArea className="w-full text-right" minLength={10} autoSize={{ minRows: 1, maxRows: 20 }} readOnly={isDisable}/>
         </Form.Item>
+        {/* Hình ảnh */}
         <Form.Item
           label={<span className="font-bold">Hình ảnh</span>}
           name="photo"
           className="right-align-photo"
+          rules={[{ required: forCreate, message: "Vui lòng chọn hình ảnh!"}]}
         >
           {isDisable ? (
             <Image src={record?.photo} width={200} height={200} />
@@ -318,9 +324,8 @@ export default function Tab01({
             </div>
           )}
         </Form.Item>
-
-
-        {isDisable && (
+        {/* Trạng thái */}
+        {isDisable && statusList && (
           <div className="flex justify-between text-base">
             <span className="font-bold">Trạng thái: </span>
             {RenderStatus(record?.status)}
@@ -336,19 +341,25 @@ export default function Tab01({
             style={{backgroundColor: "green"}} 
             onClick={ActivateType}
           >
-            Kích hoạt thể loại
+            Kích hoạt
           </Button>
         )}
         {!isDisable && (
           <Button type="default" loading={loading} 
-            onClick={ResetAll}
+            onClick={!forCreate ? ResetAll : () => setShowModal(false)}
           >
             Hủy
           </Button>
         )}
         {isDisable ? (
           <Button type="primary" loading={loading} className="nav-button ml-2" 
-            onClick={()=> setIsDisable(false)}
+            onClick={()=> {
+              if(record?.status === 2) {
+                message.info("Không thể chỉnh sửa thông tin sự kiện đã diễn ra!");
+                return;
+              }
+              setIsDisable(false)
+            }}
           >
             Chỉnh sửa
           </Button>
@@ -359,7 +370,6 @@ export default function Tab01({
             Lưu
           </Button>
         )}
-        
       </div>
     </>
   )

@@ -1,6 +1,6 @@
 import { Card, Tooltip } from "antd";
 import { EnvironmentOutlined, ClockCircleOutlined, TagOutlined, EyeOutlined, DollarCircleOutlined } from '@ant-design/icons';
-import { formatDate, DateTimeFormat } from "@/src/utils/DateFormatter";
+import { formatRangeDate } from "@/src/utils/DateFormatter";
 
 const getTicketPricesRange = (tickets) => {
   if(tickets?.length === 0) return `Miễn phí`;
@@ -31,7 +31,7 @@ export default function EventCard({ event, tickets, typeList }) {
     <Card
         hoverable
         bordered={false}
-        cover={<img className="transition-transform duration-300 transform scale-100 group-hover:scale-110" alt="eventImg" src={`/images/${event?.photo}`} />}
+        cover={<img className="transition-transform duration-300 transform scale-100 group-hover:scale-110" alt="eventImg" src={event?.photo} />}
         actions={[<span>MUA VÉ NGAY</span>]}
         className="w-[320px] event-card"
     >
@@ -45,7 +45,7 @@ export default function EventCard({ event, tickets, typeList }) {
         </li>
         <li className="flex justify-start">
           <ClockCircleOutlined />
-          <span className="text-right ml-4">{formatDate(event?.date, DateTimeFormat)}</span>
+          <span className="text-right ml-4">{formatRangeDate(null, event)}</span>
         </li>
         <li className="flex justify-start">
           <EnvironmentOutlined />

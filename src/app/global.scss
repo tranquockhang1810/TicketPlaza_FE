@@ -263,7 +263,7 @@ body,
   }
 }
 
-.ant-pagination {
+.paging {
   .ant-pagination-next button span,
   .ant-pagination-prev button span{
     color: $color-font !important;
@@ -304,5 +304,26 @@ body,
   }
   .ant-input-number-group-addon{
     color: $color-font;
+  }
+}
+
+.steps-custom {
+  .ant-steps-item-active{
+    .ant-steps-item-icon{
+      background-color: $color-secondary !important;
+      border-color: $color-secondary !important;
+      font-weight: bold;
+    }
+  }
+  .ant-steps-item-icon{
+    background-color: $color-primary !important;
+  }
+  .ant-steps-icon,
+  .ant-steps-item-title{
+    color: $color-font !important;
+  }
+
+  .ant-steps-item-title::after{
+    background-color: $color-font !important;
   }
 }

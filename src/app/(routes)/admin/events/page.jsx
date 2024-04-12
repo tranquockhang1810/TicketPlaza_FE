@@ -11,6 +11,7 @@ import dayjs from 'dayjs';
 import { render } from "react-dom";
 import { DateTimeFormat, formatDate, formatRangeDate } from "@/src/utils/DateFormatter";
 import EventModal from "./DetailModal";
+import CreateModal from "./CreateModal";
 
 export default function Events() {
   const [form] = Form.useForm();
@@ -123,8 +124,8 @@ export default function Events() {
         status: form.getFieldValue("status") === "" ? undefined : form.getFieldValue("status"),
         type: form.getFieldValue("type") === "" ? undefined : form.getFieldValue("type"),
         name: form.getFieldValue("name") === "" ? undefined : form.getFieldValue("name"),
-        // startDate: form.getFieldValue("date") ? form.getFieldValue("date")[0].format("M/D/YYYY") : dayjs().startOf('month').format("M/D/YYYY"),
-        // endDate: form.getFieldValue("date") ? form.getFieldValue("date")[1].format("M/D/YYYY") : dayjs().endOf('month').format("M/D/YYYY"),
+        startDate: form.getFieldValue("date") ? form.getFieldValue("date")[0].format("M/D/YYYY") : dayjs().startOf('year').format("M/D/YYYY"),
+        endDate: form.getFieldValue("date") ? form.getFieldValue("date")[1].format("M/D/YYYY") : dayjs().endOf('year').format("M/D/YYYY"),
       }
       const res = await api.get(ApiPath.GET_EVENT_LIST, { params });
       if (!!res?.data) {
@@ -243,7 +244,7 @@ export default function Events() {
             >
               <DatePicker.RangePicker 
                 className="w-full" 
-                defaultValue={[dayjs().startOf('month'), dayjs().endOf('month')]}
+                defaultValue={[dayjs().startOf('year'), dayjs().endOf('year')]}
                 format="DD/MM/YYYY"
                 allowClear={false}
               />
@@ -292,6 +293,12 @@ export default function Events() {
         setShowModal={setShowModal}
         getEvents={getEvents}
         statusList={statusList.filter((item) => item.value !== "")}
+        typeList={eventTypeList.filter((item) => item.value !== "")}
+      />
+      <CreateModal
+        showModal={showAddModal}
+        setShowModal={setShowAddModal}
+        getEvents={getEvents}
         typeList={eventTypeList.filter((item) => item.value !== "")}
       />
     </>

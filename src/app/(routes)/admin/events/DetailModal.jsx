@@ -4,6 +4,7 @@ import { Modal, Tabs } from "antd";
 import { AppstoreOutlined, TagOutlined, TeamOutlined, MessageOutlined} from '@ant-design/icons'
 import Tab01 from "./Tab01";
 import Tab02 from './Tab02';
+import Tab03 from './Tab03';
 
 const { TabPane } = Tabs;
 
@@ -40,6 +41,7 @@ const EventModal = ({
             showModal={showModal}
             statusList={statusList}
             typeList={typeList}
+            forCreate={false}
           />
         </TabPane>
         <TabPane tab="Vé" key="2" icon={<TagOutlined/>}>
@@ -49,7 +51,11 @@ const EventModal = ({
           />
         </TabPane>
         <TabPane tab="Thành viên" key="3" icon={<TeamOutlined />}>
-          {/* Thêm nội dung cho tab thứ 3 nếu cần */}
+          <Tab03
+            record={record}
+            showModal={showModal}
+            getEvents={getEvents}
+          />
         </TabPane>
         <TabPane tab="Phản hồi" key="4" icon={<MessageOutlined />}>
           {/* Thêm nội dung cho tab thứ 4 nếu cần */}

@@ -4,6 +4,7 @@ import { Form, Input, Button, message, InputNumber, DatePicker } from 'antd';
 import { ArrowLeftOutlined, GoogleOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@/src/context/UserContext';
+import { formatDate } from '@/src/utils/DateFormatter';
 import api from '../../api/api';
 import ApiPath from '../../api/apiPath';
 import dayjs from 'dayjs';
@@ -34,10 +35,14 @@ export default function SignUp() {
         email: form.getFieldValue("email"),
         password: form.getFieldValue("password"),
         phone: form.getFieldValue("phone"),
-        birthDay: form.getFieldValue("birthDay").format("DD/MM/YYYY")
+        birthDay: formatDate(form.getFieldValue("birthDay"))
       }
       const res = await api.post(ApiPath.SIGNUP, params);
       if(!!res?.data) {
+        if(res?.message === "Email đã được sử dụng!") {
+          message.error(res?.message);
+          return;
+        }
 				message.success(res?.message);
         onSignIn(res?.data[0]);
         router.push("/");

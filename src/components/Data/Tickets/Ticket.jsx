@@ -265,7 +265,7 @@ export default function Ticket({
               inputReadOnly={true}
               allowEmpty={false}
               className={isDisable ? 'text-white w-full' : ' w-full'}
-              disabledDate={(current) => current && current <= dayjs().endOf('day')}
+              disabledDate={(current) => current && current < dayjs().endOf('day')}
             />
           </Form.Item>
           <Form.Item

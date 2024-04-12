@@ -3,6 +3,9 @@ export const ApiPath = {
   LOGIN: getDefaultPath("users/login"),
   GOOGLE_LOGIN: getDefaultPath("users/auth/google/callback"),
   SIGNUP: getDefaultPath("users/signup"),
+  SEND_EMAIL: getDefaultPath("users/forgotPassword"),
+  VERIFY_OTP: getDefaultPath("users/verifyOTP"),
+  RESET_PASSWORD: getDefaultPath("users/changePassword"),
 
   //User
   GET_USER_INFO: getDefaultPath('users'),
@@ -19,6 +22,7 @@ export const ApiPath = {
   DEACTIVATE_EVENT:getDefaultPath('events/deactivateEvent'),
   ACTIVATE_EVENT: getDefaultPath('events/activateEvent'),
   UPDATE_EVENT: getDefaultPath('events/updateEvent'),
+  CREATE_EVENT: getDefaultPath('events'),
 
   //Ticket
   GET_TICKETS: getDefaultPath('tickets'),
