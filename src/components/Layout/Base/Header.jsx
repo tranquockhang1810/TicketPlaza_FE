@@ -78,7 +78,8 @@ const MenuButton = ({ toggleMenu, showMenu }) => (
 const MobileMenu = ({history}) => {
   const {
     onSignOut,
-    isAuthenticated
+    isAuthenticated,
+    isAdmin
   } = useUser();
 
   const handleItemClick = ({ key }) => {
@@ -118,6 +119,7 @@ const MobileMenu = ({history}) => {
   if (isAuthenticated()) {
     MobileItems[0].children = [
       { key: 'profile', icon: null, children: null, label: 'Thông tin' },
+      { key: 'admin', icon: null, children: null, label: 'Dành cho Admin' },
       { key: 'logout', icon: null, children: null, label: 'Đăng xuất' },
     ];
   }

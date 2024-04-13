@@ -18,6 +18,12 @@ export default function SignUp() {
   const router = useRouter();
 	const [form] = Form.useForm();
 
+  const handleKeyPress = (e) => {
+    if ((e.keyCode < 48 || e.keyCode > 57) && e.keyCode !== 8) {
+      e.preventDefault();
+    }
+  };
+
   const disabledDate = (current) => {
     return current && current > dayjs().endOf('day');
   };
@@ -102,7 +108,13 @@ export default function SignUp() {
               { min: 10, message: <span style={{ color: 'white' }}>Số điện thoại phải đủ 10 số!</span>}
             ]}
           >
-            <Input className='w-full' maxLength={10} controls={false} placeholder='Nhập số điện thoại' />
+            <Input 
+              className='w-full' 
+              maxLength={10} 
+              controls={false} 
+              placeholder='Nhập số điện thoại' 
+              onKeyDown={handleKeyPress}
+            />
           </Form.Item>
           <Form.Item
             label={<span className="text-white font-bold">Ngày sinh</span>}

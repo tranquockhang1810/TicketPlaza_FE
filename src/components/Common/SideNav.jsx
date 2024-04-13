@@ -42,7 +42,7 @@ export default function SideNav({type}) {
     type === "superAdmin" ?
     getItem('Quản lý chuyên sâu', '3', <ClusterOutlined />, [
       getItem('Loại sự kiện', 'event-type', <ContainerOutlined />),
-      getItem('Quản lý tài khoản Admin', 'users', <IdcardOutlined />),
+      getItem('Tài khoản Admin', 'users', <IdcardOutlined />),
     ]) : null,
     getItem('Cài đặt', '4', <SettingOutlined />, [
       getItem('Thông tin tài khoản', 'account-info', <UserOutlined />),

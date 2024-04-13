@@ -29,6 +29,7 @@ export default function Tab03({
       const params = {
         page: 1,
         limit: 100,
+        status: 0,
         justAdmin: true
       }
       const res = await api.get(ApiPath.GET_USER_INFO, { params });
@@ -90,6 +91,10 @@ export default function Tab03({
   }
 
   const handleDeleteMember = (userId) => {
+    if(user?._id !== record?.host) {
+      message.error("Bạn không thể xóa thành viên vì không phải Host!");
+      return;
+    }
     return (
       confirm({
         title: "Bạn có muốn xóa thành viên này không?",
@@ -140,64 +145,66 @@ export default function Tab03({
           : 'KHÔNG PHẢI THÀNH VIÊN'}
         </span>
       </div>
-      <Form
-        layout="horizontal"
-        form={form}
-        onFinish={handleAddMembers}
-      >
-        <Form.Item name="members" >
-        <Select
-            showSearch
-            style={{ width: '100%' }}
-            placeholder="Chọn tên Admin"
-            mode="multiple"
-            allowClear
-            optionLabelProp="label"
-            maxTagCount={2} 
-            maxTagTextLength={15}
-            optionFilterProp="children"
-            filterOption={(input, option) =>
-              option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
-            }
-          >
-            {adminList.map(user => {
-              if (memberList.some(member => member._id === user._id)) {
-                return null;
+      {user?._id === record?.host && (
+        <Form
+          layout="horizontal"
+          form={form}
+          onFinish={handleAddMembers}
+        >
+          <Form.Item name="members" >
+          <Select
+              showSearch
+              style={{ width: '100%' }}
+              placeholder="Chọn tên Admin"
+              mode="multiple"
+              allowClear
+              optionLabelProp="label"
+              maxTagCount={2} 
+              maxTagTextLength={15}
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
               }
-              return (
-                <Select.Option key={user._id} value={user._id} label={user.fullName}>
-                  <div className="flex items-center">
-                    <Avatar
-                      style={{
-                        marginRight: "8px",
-                        backgroundColor: color,
-                        verticalAlign: 'middle',
-                      }}
-                      icon={<UserOutlined />}
-                      size="small"
-                    />
-                    <div>
-                      <div className="font-bold">{user.fullName}</div>
-                      <div className="text-gray-400">{user.email}</div>
+            >
+              {adminList.map(user => {
+                if (memberList.some(member => member._id === user._id)) {
+                  return null;
+                }
+                return (
+                  <Select.Option key={user._id} value={user._id} label={user.fullName}>
+                    <div className="flex items-center">
+                      <Avatar
+                        style={{
+                          marginRight: "8px",
+                          backgroundColor: color,
+                          verticalAlign: 'middle',
+                        }}
+                        icon={<UserOutlined />}
+                        size="small"
+                      />
+                      <div>
+                        <div className="font-bold">{user.fullName}</div>
+                        <div className="text-gray-400">{user.email}</div>
+                      </div>
                     </div>
-                  </div>
-                </Select.Option>
-              );
-            })}
-          </Select>
-        </Form.Item>
-        {user?._id === record?.host && (
-          <Form.Item>
-            <Button
-              className="nav-button w-full"
-              htmlType="submit"
-            > 
-              Thêm thành viên
-            </Button>
+                  </Select.Option>
+                );
+              })}
+            </Select>
           </Form.Item>
-        )}
-        
-      </Form>
+          {user?._id === record?.host && (
+            <Form.Item>
+              <Button
+                className="nav-button w-full"
+                htmlType="submit"
+              > 
+                Thêm thành viên
+              </Button>
+            </Form.Item>
+          )}
+          
+        </Form>
+      )}
       <div>
         Tổng số thành viên: {total}
       </div>

@@ -9,6 +9,9 @@ export const ApiPath = {
 
   //User
   GET_USER_INFO: getDefaultPath('users'),
+  UPDATE_USER: getDefaultPath('users/updateUser'),
+  DEACTIVATE_USER: getDefaultPath('users/deactivateAccount'),
+  ACTIVATE_USER: getDefaultPath('users/activateAccount'),
 
   //EventType
   GET_EVENT_TYPE_LIST: getDefaultPath('eventTypes'),

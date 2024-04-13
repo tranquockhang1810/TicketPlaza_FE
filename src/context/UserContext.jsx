@@ -7,12 +7,14 @@ const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState();
+  const [token, setToken] = useState(localStorage.getItem("token"));
+  const [id, setID] = useState(localStorage.getItem("user"))
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         const params = {
-          userId: localStorage.getItem("user")
+          userId: id
         }
         const res = await api.get(ApiPath.GET_USER_INFO, { params });
         if (!!res?.data) {
@@ -24,9 +26,8 @@ export const UserProvider = ({ children }) => {
         console.error("Error fetching user data:", error);
       }
     };
-    if(!!localStorage.getItem("token"))
       fetchUserData();
-  }, []);
+  }, [token]);
 
   const onSignIn = (userData) => {
     const accessToken = userData?.token;
@@ -34,12 +35,16 @@ export const UserProvider = ({ children }) => {
 
     localStorage.setItem("token", accessToken);
     localStorage.setItem("user", profile?._id);
+    setToken(accessToken);
+    setID(profile?._id);
     setUser(profile);
   };
 
   const onSignOut = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    setToken(null);
+    setID(null)
     setUser(null);
   };
 
@@ -56,10 +61,6 @@ export const UserProvider = ({ children }) => {
     return user && user?.type === 2;
   }
 
-  const userID = () => {
-    return localStorage.getItem("user") || undefined;
-  }
-
   return (
     <UserContext.Provider value={{ 
       user, 
@@ -67,8 +68,7 @@ export const UserProvider = ({ children }) => {
       onSignOut,
       isAuthenticated,
       isAdmin,
-      isSuperAdmin,
-      userID
+      isSuperAdmin
     }}>
       {children}
     </UserContext.Provider>
