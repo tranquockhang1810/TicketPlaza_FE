@@ -8,6 +8,7 @@ import api from "@/src/app/api/api";
 import ApiPath from "@/src/app/api/apiPath";
 import { useUser } from "@/src/context/UserContext";
 import UserDetailModal from "./DetailModal";
+import AddUserModal from "./AddUserModel";
 
 export default function Users() {
   const [form] = Form.useForm();
@@ -282,6 +283,12 @@ export default function Users() {
         statusList={statusList.filter(item => item.value !== "")}
         typeList={typeList.filter(item => item.value !== "")}
         getUserList={getUserList}
+      />
+      <AddUserModal
+        getUserList={getUserList}
+        setShowModal={setShowAddModal}
+        showModal={showAddModal}
+        typeList={typeList.filter(item => item.value !== "")}
       />
     </>
   )

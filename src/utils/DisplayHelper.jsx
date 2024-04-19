@@ -44,16 +44,18 @@ export function RenderAction (Detail, Delete, item) {
       >
         Chi tiết
       </Button>
-      <Button
-        title="Xóa"
-        shape="round"
-        type="text"
-        style={{ color: "red" }}
-        icon={<DeleteOutlined/>}
-        onClick={() => Delete(item)}
-      >
-        Xóa
-      </Button>
+      {Delete && (
+        <Button
+          title="Xóa"
+          shape="round"
+          type="text"
+          style={{ color: "red" }}
+          icon={<DeleteOutlined/>}
+          onClick={() => Delete(item)}
+        >
+          Xóa
+        </Button>
+      )}
     </div>
   );
 }

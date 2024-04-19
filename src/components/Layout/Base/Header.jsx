@@ -146,7 +146,7 @@ const MobileMenu = ({history}) => {
             style={{width: "100%"}}
             className='search-button flex items-center'
             icon={<SearchOutlined 
-            style={{ fontSize: '20px', marginLeft: '15px' }} />}
+            style={{ fontSize: '20px' }} />}
             onClick={() => handleSearch()}
           />
         </Space.Compact>
@@ -238,7 +238,7 @@ export default function Header({history}) {
                   />
                   <Button 
                     className='search-button flex items-center'
-                    icon={<SearchOutlined style={{ fontSize: '20px', marginLeft: '15px' }} />}
+                    icon={<SearchOutlined style={{ fontSize: '20px' }} />}
                   >
                   </Button>
                 </Space.Compact>

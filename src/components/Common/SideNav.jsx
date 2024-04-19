@@ -12,10 +12,14 @@ import {
   TagsOutlined,
   IdcardOutlined,
   ContainerOutlined,
-  HomeOutlined
+  HomeOutlined,
+  AuditOutlined,
+  LogoutOutlined
 } from '@ant-design/icons';
 import { Menu } from 'antd';
+import confirm from 'antd/es/modal/confirm';
 import { useRouter } from 'next/navigation';
+import { useUser } from '@/src/context/UserContext';
 
 function getItem(label, key, icon, children, type) {
   return { key, icon, children, label, type };
@@ -24,20 +28,34 @@ function getItem(label, key, icon, children, type) {
 export default function SideNav({type}) {
 
   const router = useRouter();
+  const { onSignOut } = useUser();
 
   const handleClick = (itemKey) => {
-    router.push(`/admin/${itemKey}`);
+    if (itemKey === 'sign-out'){
+      confirm({
+        title:"Bạn có muốn đăng xuất không?",
+        okText: "Có",
+        okType: "danger",
+        okCancel: true,
+        cancelText: "Không",
+        onOk: () => {
+          onSignOut();
+          router.push(`/login`);
+        }
+      })
+    } else router.push(`/admin/${itemKey}`);
   };
 
   const items = [
     { type: 'divider'},
-    getItem('Trang chủ', '/', <HomeOutlined />),
+    //getItem('Trang chủ', '/', <HomeOutlined />),
     getItem('Thống kê', '1', <BarChartOutlined />, [
       getItem('Doanh số', 'profit', <DollarOutlined />), 
-      getItem('Lượt check-in', 'check-in', <EnvironmentOutlined />),
+      //getItem('Lượt check-in', 'check-in', <EnvironmentOutlined />),
       getItem('Lượt view', 'views', <EyeOutlined />), 
       getItem('Lượng vé tiêu thụ', 'ticket-sales', <TagsOutlined />),
     ]),
+    getItem('Lịch sử giao dịch', 'transaction-history', <AuditOutlined />),
     getItem('Sự kiện', 'events', <AppstoreOutlined />),
     type === "superAdmin" ?
     getItem('Quản lý chuyên sâu', '3', <ClusterOutlined />, [
@@ -47,6 +65,7 @@ export default function SideNav({type}) {
     getItem('Cài đặt', '4', <SettingOutlined />, [
       getItem('Thông tin tài khoản', 'account-info', <UserOutlined />),
       getItem('Đổi mật khẩu', 'change-password', <LockOutlined />),
+      getItem('Đăng xuất', 'sign-out', <LogoutOutlined />),
     ]),
   ];
 

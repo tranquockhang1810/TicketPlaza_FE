@@ -10,23 +10,24 @@ export const UserProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [id, setID] = useState(localStorage.getItem("user"))
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const params = {
-          userId: id
-        }
-        const res = await api.get(ApiPath.GET_USER_INFO, { params });
-        if (!!res?.data) {
-          setUser(res?.data[0]?.data[0]);
-        } else {
-          setUser(null);
-        }
-      } catch (error) {
-        console.error("Error fetching user data:", error);
+  const fetchUserData = async () => {
+    try {
+      const params = {
+        userId: id
       }
-    };
-      fetchUserData();
+      const res = await api.get(ApiPath.GET_USER_INFO, { params });
+      if (!!res?.data) {
+        setUser(res?.data[0]?.data[0]);
+      } else {
+        setUser(null);
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserData();
   }, [token]);
 
   const onSignIn = (userData) => {
@@ -68,7 +69,8 @@ export const UserProvider = ({ children }) => {
       onSignOut,
       isAuthenticated,
       isAdmin,
-      isSuperAdmin
+      isSuperAdmin,
+      fetchUserData
     }}>
       {children}
     </UserContext.Provider>

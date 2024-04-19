@@ -19,7 +19,7 @@ export default function AdminLayout({ children }) {
 					</Sider>
 
 					<Content className="defaut-bg">
-            <div className="mx-4 my-2 primary-bg rounded-xl min-h-[95vh]">
+            <div className="mx-4 my-2 primary-bg rounded-xl min-h-[97vh]">
 						  {children}
             </div>
 					</Content>

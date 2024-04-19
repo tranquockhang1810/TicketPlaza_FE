@@ -12,6 +12,7 @@ export const ApiPath = {
   UPDATE_USER: getDefaultPath('users/updateUser'),
   DEACTIVATE_USER: getDefaultPath('users/deactivateAccount'),
   ACTIVATE_USER: getDefaultPath('users/activateAccount'),
+  CREATE_USER: getDefaultPath('users'),
 
   //EventType
   GET_EVENT_TYPE_LIST: getDefaultPath('eventTypes'),
@@ -33,6 +34,15 @@ export const ApiPath = {
   DEACTIVATE_TICKET: getDefaultPath('tickets/deactivateTicket'),
   ACTIVATE_TICKET: getDefaultPath('tickets/activateTicket'),
   ADD_TICKET: getDefaultPath('tickets'),
+
+  //Dashboard
+  GET_PROFIT: getDefaultPath('bills/getRevenueList'),
+  GET_VIEWS: getDefaultPath('events/getViewList'),
+  GET_TICKET_SALES: getDefaultPath('bills/getTotalAmountTicketList'),
+
+  //Transaction
+  GET_TRANSACTIONS: getDefaultPath('bills'),
+  GET_BILL_DETAIL: getDefaultPath('bills/getBillDetail'),
 };
 
 function getDefaultPath(path) {

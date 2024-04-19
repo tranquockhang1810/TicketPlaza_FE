@@ -35,3 +35,7 @@ export const DateTimeFormat = "DD/MM/YYYY | HH:mm";
 
 export const DateFormat = 'DD/MM/YYYY';
 
+export const MonthFormat = 'MM/YYYY';
+
+export const YearFormat = 'YYYY';
+

@@ -7,6 +7,7 @@ import {
   DatePicker,
   message
 } from 'antd';
+import {TagOutlined} from '@ant-design/icons'
 import React, { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import { 
@@ -21,8 +22,8 @@ import api from '@/src/app/api/api';
 import ApiPath from '@/src/app/api/apiPath';
 import { useUser } from '@/src/context/UserContext';
 
-export default function Profit() {
-  const { user, isSuperAdmin } = useUser();
+export default function Views() {
+  const { isSuperAdmin, user } = useUser();
   const [loading, setLoading] = useState(false);
   const [chartLoading, setChartLoading] = useState(false);
   const [totalDay, setTotalDay] = useState(0);
@@ -60,9 +61,9 @@ export default function Profit() {
   const DataByDate = async (params, type) => {
     try {
       setLoading(true);
-      const res = await api.get(ApiPath.GET_PROFIT, { params });
+      const res = await api.get(ApiPath.GET_TICKET_SALES, { params });
       if(res?.data) {
-        const profit = getTotalFromArray(res?.data[0].revenueList);
+        const profit = getTotalFromArray(res?.data[0].amountOfTicketList);
         switch (type) {
           case "day":
             setTotalDay(profit);
@@ -108,7 +109,6 @@ export default function Profit() {
       await DataByDate(paramsByDay, 'day');
       await DataByDate(paramsByMonth, 'month');
       await DataByDate(paramsByYear, 'year');
-      
     } catch (error) {
       console.error(error);
       message.error("Đã có lỗi xảy ra! Vui lòng thử lại!");
@@ -125,15 +125,15 @@ export default function Profit() {
         startDate: formatDate(rangeDay[0]),
         endDate: formatDate(rangeDay[1])
       }
-      const res = await api.get(ApiPath.GET_PROFIT, { params });
+      const res = await api.get(ApiPath.GET_TICKET_SALES, { params });
       if(res?.data) {
         const colors = generateRandomColor(res?.data[0].eventNameList.length);
         const data = {
           labels: res?.data[0].eventNameList,
           datasets: [
             {
-              label: "Doanh thu",
-              data: res?.data[0].revenueList,
+              label: "SL Vé",
+              data: res?.data[0].amountOfTicketList,
               backgroundColor: colors,
               hoverOffset: 4
             }
@@ -165,12 +165,12 @@ export default function Profit() {
         <Col span={8}>
           <Card bordered={false} className='m-4' loading={loading}>
             <Statistic
-              title={`Doanh thu theo ngày: ${formatDate(dayjs(), DateFormat)}`}
+              title={`Lượng vé tiêu thụ theo ngày: ${formatDate(dayjs(), DateFormat)}`}
               value={totalDay}
               valueStyle={{
                 color: '#3f8600',
               }}
-              suffix="VNĐ"
+              prefix={<TagOutlined />}
               formatter={formatter}
             />
           </Card>
@@ -178,12 +178,12 @@ export default function Profit() {
         <Col span={8}>
           <Card bordered={false} className='m-4' loading={loading}>
             <Statistic
-              title={`Doanh thu theo tháng: ${formatDate(dayjs(), MonthFormat)}`}
+              title={`Lượng vé tiêu thụ theo tháng: ${formatDate(dayjs(), MonthFormat)}`}
               value={totalMonth}
               valueStyle={{
                 color: '#3f8600',
               }}
-              suffix="VNĐ"
+              prefix={<TagOutlined />}
               formatter={formatter}
             />
           </Card>
@@ -191,12 +191,12 @@ export default function Profit() {
         <Col span={8}>
           <Card bordered={false} className='m-4' loading={loading}>
             <Statistic
-              title={`Doanh thu theo năm: ${formatDate(dayjs(), YearFormat)}`}
+              title={`Lượng vé tiêu thụ theo năm: ${formatDate(dayjs(), YearFormat)}`}
               value={totalYear}
               valueStyle={{
                 color: '#3f8600',
               }}
-              suffix="VNĐ"
+              prefix={<TagOutlined />}
               formatter={formatter}
             />
           </Card>
@@ -208,7 +208,7 @@ export default function Profit() {
           loading={chartLoading}
           title={
             <div className='flex justify-between'>
-              <div className='font-bold text-2xl'>BIỂU ĐỒ DOANH SỐ</div>
+              <div className='font-bold text-2xl'>BIỂU ĐỒ LƯỢNG VÉ TIÊU THỤ</div>
               <DatePicker.RangePicker 
                 value={rangeDay}
                 onChange={handleDateChange}
