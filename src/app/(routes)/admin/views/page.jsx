@@ -92,17 +92,20 @@ export default function Views() {
     try {
       setLoading(true);
       const paramsByDay = {
-        userId: isSuperAdmin() ? undefined : user._id,
+        host: isSuperAdmin() ? undefined : user._id,
+        member: isSuperAdmin() ? undefined : user._id,
         startDate: formatDate(rangeDay[0]),
         endDate: formatDate(rangeDay[1])
       }
       const paramsByMonth = {
-        userId: isSuperAdmin() ? undefined : user._id,
+        host: isSuperAdmin() ? undefined : user._id,
+        member: isSuperAdmin() ? undefined : user._id,
         startDate: formatDate(rangeDay[0].startOf('month')),
         endDate: formatDate(rangeDay[1].endOf('month'))
       }
       const paramsByYear = {
-        userId: isSuperAdmin() ? undefined : user._id,
+        host: isSuperAdmin() ? undefined : user._id,
+        member: isSuperAdmin() ? undefined : user._id,
         startDate: formatDate(rangeDay[0].startOf('year')),
         endDate: formatDate(rangeDay[1].endOf('year'))
       }
@@ -121,7 +124,8 @@ export default function Views() {
     try {
       setChartLoading(true);
       const params = {
-        userId: isSuperAdmin() ? undefined : user._id,
+        host: isSuperAdmin() ? undefined : user._id,
+        member: isSuperAdmin() ? undefined : user._id,
         startDate: formatDate(rangeDay[0]),
         endDate: formatDate(rangeDay[1])
       }

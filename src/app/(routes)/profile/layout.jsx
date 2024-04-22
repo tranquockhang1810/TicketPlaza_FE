@@ -5,12 +5,10 @@ export const metadata = {
 	description: 'Hệ thống mua vé sự kiện',
 }
 
-export default function AboutUs(){
+export default function PromotionPage({children}){
 	return(
-		<section>
-			<div className="section-header w-full my-2 text-4xl">
-				ABOUT US
-			</div>
-		</section>
+		<Layout noBanner>
+			{children}
+		</Layout>
 	)
 }

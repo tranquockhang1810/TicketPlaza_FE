@@ -19,16 +19,6 @@ const UserDetailModal = ({
   const [isDisable, setIsDisable] = useState(true);
   const [loading, setLoading] = useState(false);
 
-  const handleKeyPress = (e) => {
-    if ((e.keyCode < 48 || e.keyCode > 57) && e.keyCode !== 8) {
-      e.preventDefault();
-    }
-  };
-
-  const disabledDate = (current) => {
-    return current && current > dayjs().endOf('day');
-  };
-
   const RenderStatus = (status) => {
     const {title, color} = getItemWithColor(statusList, status);
     return colorTextDisplay(title, color);
@@ -41,16 +31,10 @@ const UserDetailModal = ({
       form.validateFields().then(async () => {
         try {
           setLoading(true);
-          const { fullName, email, phone, identityID, birthDay, type} = form.getFieldValue();
+          const { type } = form.getFieldValue();
           const body = {
-            fullName,
-            email,
-            phone,
-            identityID,
-            birthDay: formatDate(birthDay),
             type
           };
-          console.log(body);
           const params = { userId: record?._id };
           const res = await api.patch(ApiPath.UPDATE_USER, body, { params });
           if(res?.data) {
@@ -125,7 +109,7 @@ const UserDetailModal = ({
           style={{backgroundColor: "green"}} 
           onClick={() => ActivateType(record)}
         >
-          Kích hoạt thể loại
+          Kích hoạt tài khoản
         </Button> : undefined,
         !isDisable ?
         <Button type="default" loading={loading} onClick={() => {
@@ -144,48 +128,35 @@ const UserDetailModal = ({
           label={<span className="font-bold">Họ tên </span>}
           name="fullName"
           initialValue={record?.fullName}
-          rules={[{ required: !isDisable, message: "Vui lòng nhập họ tên" }]}
         >
-          <Input readOnly={isDisable} className="text-right"/>
+          <Input readOnly={true} className="text-right"/>
         </Form.Item>
         <Form.Item
           label={<span className="font-bold">Email </span>}
           name="email"
           initialValue={record?.email}
-          rules={[{ required: !isDisable, message: "Vui lòng nhập email" }]}
         >
-          <Input type="email" readOnly={isDisable} className="text-right"/>
+          <Input type="email" readOnly={true} className="text-right"/>
         </Form.Item>
         <Form.Item
           label={<span className="font-bold">Số điện thoại </span>}
           name="phone"
           initialValue={record?.phone}
-          rules={[
-            { required: !isDisable, message: "Vui lòng nhập số điện thoại!" },
-            { min: 10, message: "Số điện thoại phải đủ 10 số!"}
-          ]}
         >
-          <Input onKeyDown={handleKeyPress} maxLength={10} readOnly={isDisable} className="text-right"/>
+          <Input maxLength={10} readOnly={true} className="text-right"/>
         </Form.Item>
         <Form.Item
           label={<span className="font-bold">CCCD </span>}
           name="identityID"
           initialValue={record?.identityID}
-          rules={[
-            { required: !isDisable, message: "Vui lòng nhập số CCCD!" },
-            { min: 12, message: "CCCD phải đủ 12 số!"}
-          ]}
         >
-          <Input onKeyDown={handleKeyPress} maxLength={12} readOnly={isDisable} className="text-right"/>
+          <Input maxLength={12} readOnly={true} className="text-right"/>
         </Form.Item>
         <Form.Item
           label={<span className="font-bold">Ngày sinh</span>}
           name="birthDay"
           initialValue={dayjs(record?.birthDay)}
-          rules={[
-            { required: !isDisable, message: "Vui lòng nhập ngày sinh!"},
-          ]}
-          style={{ pointerEvents: isDisable ? 'none' : 'auto' }}
+          style={{ pointerEvents: 'none'}}
         >
           <DatePicker 
             format={DateFormat}
@@ -197,7 +168,6 @@ const UserDetailModal = ({
             inputReadOnly={true}
             allowEmpty={false}
             className='w-full datePicker-text-right'
-            disabledDate={disabledDate}
           />
         </Form.Item>
         <Form.Item

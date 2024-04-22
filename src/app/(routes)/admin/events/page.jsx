@@ -15,8 +15,7 @@ import CreateModal from "./CreateModal";
 
 export default function Events() {
   const [form] = Form.useForm();
-  const { isSuperAdmin, userID } = useUser();
-  const adminID = userID;
+  const { isSuperAdmin, user } = useUser();
 
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
@@ -119,8 +118,8 @@ export default function Events() {
       const params = {
         page: page,
         limit: limit,
-        host: isSuperAdmin() ? undefined: adminID,
-        member: isSuperAdmin() ? undefined: adminID,
+        host: isSuperAdmin() ? undefined: user?._id,
+        member: isSuperAdmin() ? undefined: user?._id,
         status: form.getFieldValue("status") === "" ? undefined : form.getFieldValue("status"),
         type: form.getFieldValue("type") === "" ? undefined : form.getFieldValue("type"),
         name: form.getFieldValue("name") === "" ? undefined : form.getFieldValue("name"),

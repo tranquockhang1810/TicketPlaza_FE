@@ -67,14 +67,15 @@ export default function Tab03({
       const body = { 
         members: [
           ...memList, 
-          ...initMembersIDs
+          ...initMembersIDs.filter(id => id !== record?.host)
         ] 
       }
       const res = await api.patch(ApiPath.UPDATE_EVENT, body, { params });
       if(res?.data) {  
         message.success(res?.message);
-        setInitMembersIDs(body.members)
-        const memList = adminList.filter(user => body.members.includes(user._id));
+        const newMembersIDs = [ record?.host, ...body.members];
+        setInitMembersIDs(newMembersIDs)
+        const memList = adminList.filter(user => newMembersIDs.includes(user._id));
         setMemberList(memList);
         setTotal(memList.length);
         form.resetFields();
@@ -95,6 +96,10 @@ export default function Tab03({
       message.error("Bạn không thể xóa thành viên vì không phải Host!");
       return;
     }
+    if(user?._id === userId) {
+      message.error("Bạn không thể xóa chính mình!");
+      return;
+    }
     return (
       confirm({
         title: "Bạn có muốn xóa thành viên này không?",
@@ -107,13 +112,14 @@ export default function Tab03({
             setLoading(true);
             const params = { eventId: record?._id };
             const body = { 
-              members: initMembersIDs.filter(id => id !== userId)
+              members: initMembersIDs.filter(id => id !== userId && id !== record?.host)
             }
             const res = await api.patch(ApiPath.UPDATE_EVENT, body, { params });
             if(res?.data) {  
               message.success(res?.message);
-              setInitMembersIDs(body.members)
-              const memList = adminList.filter(user => body.members.includes(user._id));
+              const newMembersIDs = [ record?.host, ...body.members];
+              setInitMembersIDs(newMembersIDs)
+              const memList = adminList.filter(user => newMembersIDs.includes(user._id));
               setMemberList(memList);
               setTotal(memList.length);
               form.resetFields();
@@ -140,8 +146,8 @@ export default function Tab03({
     <div>
       <div className="text-center mb-2">
         <span className="font-bold">
-          VAI TRÒ CỦA BẠN: {(user?._id === record?.host || memberList.includes(user?._id)) 
-          ? `THÀNH VIÊN ${user?._id === record?.host && ' - HOST'}` 
+          VAI TRÒ CỦA BẠN: {(user?._id === record?.host || record?.members.includes(user?._id)) 
+          ? `THÀNH VIÊN ${user?._id === record?.host ? ' - HOST' : ""}` 
           : 'KHÔNG PHẢI THÀNH VIÊN'}
         </span>
       </div>

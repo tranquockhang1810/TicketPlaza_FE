@@ -22,12 +22,13 @@ export default function Login() {
       setLoading(true);
       const urlParams = new URLSearchParams(window.location.search);
       const res = JSON.parse(urlParams.get('data'));
-      if(!!res?.data) {
+      if(res?.data) {
 				message.success(res?.message);
         onSignIn(res?.data[0]);
         router.push("/");
-      } 
+      }
     } catch (error) {
+      message.error("Đăng nhập bằng Google thất bại!");
       console.error(error);
     } finally {
       setLoading(false);
@@ -132,13 +133,14 @@ export default function Login() {
             <Divider style={{ backgroundColor: "white" }} />
             <Form.Item>
               <Button
+                loading={loading}
                 type="primary"
                 style={{ width: "100%", height: "36px" }}
                 className='main-button h-14'
                 icon={<GoogleOutlined />}
                 onClick={() => {
                   SetGoogleLogin(true);
-                  router.push("http://localhost:8000/users/auth/google");
+                  router.push(ApiPath.GOOGLE_LOGIN_UI);
               } }
               >
                 Đăng nhập bằng Google

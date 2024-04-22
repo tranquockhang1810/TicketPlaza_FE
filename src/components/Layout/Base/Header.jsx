@@ -81,7 +81,7 @@ const MobileMenu = ({history}) => {
     isAuthenticated,
     isAdmin
   } = useUser();
-
+  const [searchValue, setSearchValue] = useState('');
   const handleItemClick = ({ key }) => {
     if (key === 'logout') {
       onSignOut();
@@ -99,9 +99,19 @@ const MobileMenu = ({history}) => {
     history.push(path);
   };
 
-  const handleSearch = (value) => {
-    // Xử lý tìm kiếm ở đây nếu cần
-    console.log('Đang tìm kiếm:', value);
+  const handleInputChange = (e) => {
+    setSearchValue(e.target.value);
+  };
+
+  const handleSearch = () => {
+    const searchQuery = searchValue.trim() ? `?keyword=${encodeURIComponent(searchValue.trim())}` : '';
+    history.push(`/events${searchQuery}`);
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
   };
 
   const MobileItems = [
@@ -140,14 +150,15 @@ const MobileMenu = ({history}) => {
           <Input 
             className='search-input w-full'
             placeholder="Tìm kiếm tên sự kiện"
-            onPressEnter={(e) => handleSearch(e.target.value)}
+            onChange={handleInputChange}
+            onKeyDown={handleKeyPress}
           />
           <Button 
             style={{width: "100%"}}
             className='search-button flex items-center'
             icon={<SearchOutlined 
             style={{ fontSize: '20px' }} />}
-            onClick={() => handleSearch()}
+            onClick={handleSearch}
           />
         </Space.Compact>
       </div>
@@ -157,6 +168,7 @@ const MobileMenu = ({history}) => {
 
 export default function Header({history}) {
   const [showMenu, setShowMenu] = useState(false);
+  const [searchValue, setSearchValue] = useState('');
   const {
     isAuthenticated,
     onSignOut,
@@ -173,6 +185,7 @@ export default function Header({history}) {
       onSignOut();
       message.success("Đăng xuất thành công!");
       history.refresh();
+      history.push('/');
       return;
     }
   
@@ -185,6 +198,20 @@ export default function Header({history}) {
     history.push(path);
   };
   
+  const handleInputChange = (e) => {
+    setSearchValue(e.target.value);
+  };
+
+  const handleSearch = () => {
+    const searchQuery = searchValue.trim() ? `?keyword=${encodeURIComponent(searchValue.trim())}` : '';
+    history.push(`/events${searchQuery}`);
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
   
   const handleToggleLanguage = () => {
       const newLanguage = language === 'VN' ? 'EN' : 'VN';
@@ -235,10 +262,13 @@ export default function Header({history}) {
                   <Input 
                     className='search-input w-[380px]'
                     placeholder="Tìm kiếm tên sự kiện"
+                    onChange={handleInputChange}
+                    onKeyDown={handleKeyPress}
                   />
                   <Button 
                     className='search-button flex items-center'
                     icon={<SearchOutlined style={{ fontSize: '20px' }} />}
+                    onClick={handleSearch}
                   >
                   </Button>
                 </Space.Compact>

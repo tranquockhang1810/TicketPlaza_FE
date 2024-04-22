@@ -8,8 +8,8 @@ export const metadata = {
 
 export default function EventsPage(){
 	return(
-		<Layout>
-			<EventsSection/>
+		<Layout noBanner={true}>
+			<EventsSection header={"CÁC SỰ KIỆN"} filter={true}/>
 		</Layout>
 	)
 }

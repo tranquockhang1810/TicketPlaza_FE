@@ -9,7 +9,7 @@ export const metadata = {
 export default function Homepage(){
 	return(
 			<Layout>
-				<EventsSection/>
+				<EventsSection header={"SỰ KIỆN HOT"}/>
 				<Promotion/>
 			</Layout>
 	)

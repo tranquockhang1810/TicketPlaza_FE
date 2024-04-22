@@ -345,7 +345,7 @@ export default function Tab01({
           </Button>
         )}
         {!isDisable && (
-          <Button type="default" loading={loading} 
+          <Button type="default" 
             onClick={!forCreate ? ResetAll : () => setShowModal(false)}
           >
             Hủy

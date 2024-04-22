@@ -1,6 +1,7 @@
 export const ApiPath = {
   //Authenticate
   LOGIN: getDefaultPath("users/login"),
+  GOOGLE_LOGIN_UI: getDefaultPath('users/auth/google'),
   GOOGLE_LOGIN: getDefaultPath("users/auth/google/callback"),
   SIGNUP: getDefaultPath("users/signup"),
   SEND_EMAIL: getDefaultPath("users/forgotPassword"),

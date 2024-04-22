@@ -147,7 +147,7 @@ export default function Users() {
     }
     return (
       confirm({
-        title: "Bạn có muốn khóa thể loại này không?",
+        title: "Bạn có muốn khóa tài khoản này không?",
         okText: "Có",
         okType: "danger",
         okCancel: true,
