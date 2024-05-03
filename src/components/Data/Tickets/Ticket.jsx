@@ -11,15 +11,16 @@ import api from '@/src/app/api/api';
 import ApiPath from '@/src/app/api/apiPath';
 
 const statusList = [
-  { label: "Kích hoạt" , value: 0, color: "white"},
-  { label: "Đã xóa", value: 1, color: "red"}
+  { label: "Kích hoạt", value: 0, color: "white" },
+  { label: "Đã xóa", value: 1, color: "red" }
 ]
 
 export default function Ticket({
   record,
   ticket,
   getTickets,
-  newTicket
+  newTicket,
+  client
 }) {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
@@ -31,7 +32,7 @@ export default function Ticket({
   }
 
   const RenderStatus = (status) => {
-    const {title, color} = getItemWithColor(statusList,status);
+    const { title, color } = getItemWithColor(statusList, status);
     return colorTextDisplay(title, color);
   }
 
@@ -42,7 +43,7 @@ export default function Ticket({
         const params = {
           ticketId: ticket?._id,
         };
-        const { ticketName, description, price,  expirationDate, totalAmount } = form.getFieldValue();
+        const { ticketName, description, price, expirationDate, totalAmount } = form.getFieldValue();
         const body = {
           eventId: newTicket ? record?._id : undefined,
           name: ticketName !== "" ? ticketName : undefined,
@@ -52,11 +53,11 @@ export default function Ticket({
           expirationDate: dateWithUct(expirationDate),
           totalAmount: newTicket ? totalAmount : undefined,
           status: newTicket ? 0 : undefined,
-        } 
+        }
         let res = {}
-        if(newTicket) res = await api.post(ApiPath.ADD_TICKET, body);
+        if (newTicket) res = await api.post(ApiPath.ADD_TICKET, body);
         else res = await api.patch(ApiPath.UPDATE_TICKET, body, { params });
-        if(!!res?.data){  
+        if (!!res?.data) {
           await getTickets();
           message.success(res?.message);
         } else {
@@ -72,7 +73,7 @@ export default function Ticket({
   }
 
   const DeleteTicket = () => {
-    return(
+    return (
       confirm({
         title: "Bạn có muốn xóa vé này không?",
         okText: "Có",
@@ -85,9 +86,9 @@ export default function Ticket({
             const params = {
               ticketId: ticket?._id,
             };
-            const body = {} 
+            const body = {}
             const res = await api.patch(ApiPath.DEACTIVATE_TICKET, body, { params });
-            if(!!res?.data){  
+            if (!!res?.data) {
               await getTickets();
               message.success(res?.message);
             } else {
@@ -104,8 +105,8 @@ export default function Ticket({
     )
   }
 
-  const ActivateTicket = async() => {
-    return(
+  const ActivateTicket = async () => {
+    return (
       confirm({
         title: "Bạn có muốn kích hoạt vé này không?",
         okText: "Có",
@@ -118,9 +119,9 @@ export default function Ticket({
             const params = {
               ticketId: ticket?._id,
             };
-            const body = {} 
+            const body = {}
             const res = await api.patch(ApiPath.ACTIVATE_TICKET, body, { params });
-            if(!!res?.data){  
+            if (!!res?.data) {
               await getTickets();
               message.success(res?.message);
             } else {
@@ -141,17 +142,17 @@ export default function Ticket({
     <Menu>
       {isDisable ? (
         <>
-          <Menu.Item 
-            key="1" 
-            icon={<EditOutlined/>} 
+          <Menu.Item
+            key="1"
+            icon={<EditOutlined />}
             onClick={() => setIsDisable(false)}
             warnKey
           >
             Chỉnh sửa
           </Menu.Item>
           {!newTicket ? (
-            <Menu.Item 
-              key="2" 
+            <Menu.Item
+              key="2"
               icon={ticket?.status === 0 ? <DeleteOutlined /> : <TagOutlined />}
               danger
               onClick={ticket?.status === 0 ? DeleteTicket : ActivateTicket}
@@ -170,30 +171,30 @@ export default function Ticket({
 
   return (
     <Dropdown
-      trigger={['contextMenu']}
+      trigger={!client ? ['contextMenu'] : []}
       overlay={menu}
     >
-      <Form 
+      <Form
         form={form}
         layout='vertical'
-        className='flex flex-row my-4'
+        className='flex flex-row my-4 max-w-[600px] min-h-[370px]'
         variant={isDisable ? 'borderless' : 'outlined'}
       >
         <div className='primary-bg w-[60%] p-4 rounded-tl-xl rounded-bl-xl'>
           <Form.Item
             label={<span className='text-white font-bold'>Sự kiện:</span>}
-            className='text-justify'
+            className={!client ? 'text-justify' : 'text-justify mb-16'}
             initialValue={record?.name}
             name='eventName'
           >
-            <Input.TextArea className={isDisable ? 'text-white' : ''} readOnly autoSize={{ minRows: 1, maxRows: 3 }}/>
+            <Input.TextArea className={isDisable ? 'text-white' : ''} readOnly autoSize={{ minRows: 1, maxRows: 3 }} />
           </Form.Item>
           <Form.Item
             name='ticketName'
             label={<span className='text-white font-bold'>Vé:</span>}
-            className='text-justify'
+            className={!client ? 'text-justify' : 'text-justify mb-16'}
             initialValue={ticket?.name}
-            rules={[{ required: !isDisable, message: "Không thể để trống tên vé!"}]}
+            rules={[{ required: !isDisable, message: "Không thể để trống tên vé!" }]}
           >
             <Input className={isDisable ? 'text-white' : ''} readOnly={isDisable} />
           </Form.Item>
@@ -201,23 +202,23 @@ export default function Ticket({
             name='description'
             initialValue={ticket?.description}
             label={<span className='text-white font-bold'>Mô tả:</span>}
-            rules={[{ required: !isDisable, message: "Không thể để trống mô tả!"}]}
+            rules={[{ required: !isDisable, message: "Không thể để trống mô tả!" }]}
           >
             <Input.TextArea className={isDisable ? 'text-white text-justify' : 'text-justify'} readOnly={isDisable} autoSize={{ minRows: 1, maxRows: 4 }} />
           </Form.Item>
-          {isDisable && (
-          <div className="flex justify-between text-sm">
-            <span className="font-bold text-white">Trạng thái: </span>
-            {RenderStatus(ticket?.status)}
-          </div>
-        )}
+          {isDisable && !client && (
+            <div className="flex justify-between text-sm">
+              <span className="font-bold text-white">Trạng thái: </span>
+              {RenderStatus(ticket?.status)}
+            </div>
+          )}
         </div>
         <div className='primary-bg w-[40%] flex flex-col justify-evenly p-4 rounded-tr-xl rounded-br-xl border-l-2 border-dashed border-gray-200'>
           <Form.Item
             initialValue={CurrencyDisplay(ticket?.price)}
             label={<span className='text-white font-bold'>Giá:</span>}
             name="price"
-            rules={[{ required: !isDisable, message: "Không thể để trống giá tiền!"}]}
+            rules={[{ required: !isDisable, message: "Không thể để trống giá tiền!" }]}
           >
             <InputNumber
               className={isDisable ? 'w-fit white-price' : 'w-full'}
@@ -233,7 +234,7 @@ export default function Ticket({
             className='text-justify'
             name='releaseDate'
             initialValue={dayjs(ticket?.releaseDate)}
-            style={{pointerEvents: 'none'}}
+            style={{ pointerEvents: 'none' }}
           >
             <DatePicker
               format={DateFormat}
@@ -252,8 +253,8 @@ export default function Ticket({
             className='text-justify'
             name='expirationDate'
             initialValue={dayjs(ticket?.expirationDate)}
-            style={{pointerEvents: isDisable ? 'none' : 'auto'}}
-            rules={[{ required: !isDisable, message: "Không thể để trống ngày!"}]}
+            style={{ pointerEvents: isDisable ? 'none' : 'auto' }}
+            rules={[{ required: !isDisable, message: "Không thể để trống ngày!" }]}
           >
             <DatePicker
               format={DateFormat}
@@ -269,12 +270,12 @@ export default function Ticket({
             />
           </Form.Item>
           <Form.Item
-            label={<span className='text-white font-bold'>Số lượng phát hành:</span>}
+            label={<span className='text-white font-bold'>{!client ? "Số lượng phát hành:" : 'Số lượng vé còn lại:'}</span>}
             className='text-justify'
             name='totalAmount'
             initialValue={ticket?.totalAmount}
             rules={[
-              { required: !isDisable, message: "Không được để trống số lượng!"},
+              { required: !isDisable, message: "Không được để trống số lượng!" },
             ]}
           >
             <InputNumber
@@ -290,9 +291,9 @@ export default function Ticket({
               >
                 <span className='text-white'>Hủy</span>
               </Button>
-              <Button 
-                type="text" 
-                className="main-button" 
+              <Button
+                type="text"
+                className="main-button"
                 htmlType='submit'
                 onClick={UpdateTicket}
               >

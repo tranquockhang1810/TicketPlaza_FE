@@ -194,7 +194,7 @@ export default function Users() {
       </div>
       <Form form={form} layout="vertical" className="p-4" onFinish={getUserList}>
         <Row gutter={12} className="flex justify-start">
-          <Col xs={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 8 }} xxl={{ span: 6 }}>
+          <Col xs={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 8 }} xxl={{ span: 8 }}>
             <Form.Item
               name="fullName"
               label={<span className="text-white font-bold">Tên tài khoản</span>}
@@ -202,7 +202,7 @@ export default function Users() {
               <Input placeholder="Nhập tên tài khoản" allowClear/>
             </Form.Item>
           </Col>
-          <Col xs={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 8 }} xxl={{ span: 6 }}>
+          <Col xs={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 8 }} xxl={{ span: 8 }}>
             <Form.Item
               name="email"
               label={<span className="text-white font-bold">Email</span>}
@@ -210,7 +210,7 @@ export default function Users() {
               <Input placeholder="Nhập email" allowClear/>
             </Form.Item>
           </Col>
-          <Col xs={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 8 }} xxl={{ span: 6 }}>
+          <Col xs={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 8 }} xxl={{ span: 8 }}>
             <Form.Item
               label={<span className="text-white font-bold">Số điện thoại</span>}
               name="phone"
@@ -223,7 +223,7 @@ export default function Users() {
               />
             </Form.Item>
           </Col>
-          <Col xs={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 8 }} xxl={{ span: 6 }}>
+          <Col xs={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 8 }} xxl={{ span: 8 }}>
             <Form.Item
               label={<span className="text-white font-bold">Loại tài khoản</span>}
               name="type"
@@ -231,7 +231,7 @@ export default function Users() {
               <Select options={typeList} defaultValue={""}/>
             </Form.Item>
           </Col>
-          <Col xs={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 8 }} xxl={{ span: 6 }}>
+          <Col xs={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 8 }} xxl={{ span: 8 }}>
             <Form.Item
               name="status"
               label={<span className="text-white font-bold">Trạng thái</span>}

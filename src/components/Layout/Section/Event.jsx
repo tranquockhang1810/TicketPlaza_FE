@@ -6,8 +6,8 @@ import { useState, useEffect } from 'react';
 import ApiPath from '@/src/app/api/apiPath';
 import { message, Form, Row, Col, Input, Select, DatePicker, Empty } from 'antd';
 import dayjs from 'dayjs';
- 
-export default function EventsSection({header, filter}) {
+
+export default function EventsSection({ header, filter, limit }) {
   const [updatedHeader, setUpdatedHeader] = useState(header);
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
@@ -25,7 +25,7 @@ export default function EventsSection({header, filter}) {
 
   const viewMoreEvents = (event) => {
     event.preventDefault();
-    if(path === '/events') {
+    if (path === '/events') {
       setCurrentPage(prevPage => prevPage + 1);
     } else router.push('/events');
   }
@@ -42,7 +42,7 @@ export default function EventsSection({header, filter}) {
       if (!!res?.data) {
         setTypeList(res?.data[0].data);
       } else {
-        message.error( res?.error?.message|| "Đã có lỗi xảy ra! Vui lòng thử lại!");
+        message.error(res?.error?.message || "Đã có lỗi xảy ra! Vui lòng thử lại!");
       }
     } catch (error) {
       console.error(error);
@@ -56,23 +56,26 @@ export default function EventsSection({header, filter}) {
     try {
       setLoading(true);
       const keyword = searchParams.get('keyword');
-      const {type, date} = form.getFieldValue();
-      const params = { 
+      const { type, date } = form.getFieldValue();
+      const params = {
         type: type !== "" ? type : undefined,
-        startDate: date ? date[0].format("M/D/YYYY")  : dateRange[0].format("M/D/YYYY") ,
-        endDate: date ? date[1].format("M/D/YYYY")  : dateRange[1].format("M/D/YYYY") ,
+        startDate: date ? date[0].format("M/D/YYYY") : dateRange[0].format("M/D/YYYY"),
+        endDate: date ? date[1].format("M/D/YYYY") : dateRange[1].format("M/D/YYYY"),
         page: currentPage,
-        sort: "view", 
-        ticket: true, 
-        limit: 8,
+        sort: "view",
+        ticket: true,
+        limit: limit || 8,
         status: 0,
         name: keyword !== "" ? keyword : undefined,
       }
       const res = await api.get(ApiPath.GET_EVENT_LIST, { params });
       if (res?.data[0]?.data) {
+        let newData = res?.data[0].data;
         if (currentPage > 1) {
-          setData(prevData => [...prevData, ...res?.data[0].data]);
-        } else setData(res?.data[0].data);
+          setData(prevData => [...prevData, ...newData]);
+        } else {
+          setData(newData);
+        }
         setTotalPages(res?.data[0].totalPages || 1);
       } else {
         message.error(res?.error?.message || "Đã có lỗi xảy ra! Vui lòng thử lại!");
@@ -84,6 +87,14 @@ export default function EventsSection({header, filter}) {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const paymentMessage = searchParams.get("paymentMessage");
+    if (paymentMessage) {
+      message.success(paymentMessage);
+      router.push('/events');
+    }
+  }, [])
 
   useEffect(() => {
     getEventTypeList();
@@ -105,11 +116,11 @@ export default function EventsSection({header, filter}) {
   }, [data]);
 
   const handleTypeChange = (value) => {
-    setType(value); 
+    setType(value);
   };
 
   const handleDateChange = (dates) => {
-    setDateRange(dates); 
+    setDateRange(dates);
   };
 
   return (
@@ -119,8 +130,8 @@ export default function EventsSection({header, filter}) {
           {updatedHeader}
         </h1>
         {filter && (
-          <Form 
-            form={form} 
+          <Form
+            form={form}
             layout="horizontal"
             className='mt-8'
           >
@@ -131,7 +142,7 @@ export default function EventsSection({header, filter}) {
                   label={<span className="font-bold secondary-color text-xl">Thể loại</span>}
                   initialValue={type}
                 >
-                  <Select 
+                  <Select
                     options={[
                       { label: "Tất cả", value: "" },
                       ...typeList.map((type) => ({
@@ -148,8 +159,8 @@ export default function EventsSection({header, filter}) {
                   name="date"
                   label={<span className="secondary-color font-bold text-xl">Thời gian</span>}
                 >
-                  <DatePicker.RangePicker 
-                    className="w-full" 
+                  <DatePicker.RangePicker
+                    className="w-full"
                     defaultValue={dateRange}
                     format="DD/MM/YYYY"
                     allowClear={false}
@@ -160,39 +171,40 @@ export default function EventsSection({header, filter}) {
             </Row>
           </Form>
         )}
-        
+
         {loading ? (
-        // Nếu đang loading thì hiển thị loading indicator
-        <div className="flex flex-wrap justify-center">
-          {[...Array(8)].map((_, index) => (
-            <EventCardSkeleton key={index}/>
-          ))}
-        </div>
-      ) : (
-        isEmptyData ? (
-          <Empty 
-            className='h-[40vh] flex align-center justify-center flex-col'
-            description={"Không có dữ liệu!"}
-          />
-        ) : (
-          <div className='flex flex-wrap justify-center'>
-            {data.map((data) => (
-              <EventCard event={data?.event} tickets={data?.tickets} typeList={typeList} key={data?.event._id}/>
+          // Nếu đang loading thì hiển thị loading indicator
+          <div className="flex flex-wrap justify-center">
+            {[...Array(8)].map((_, index) => (
+              <EventCardSkeleton key={index} />
             ))}
           </div>
-        )
-      )}
+        ) : (
+          isEmptyData ? (
+            <Empty
+              className='h-[40vh] flex align-center justify-center flex-col'
+              description={"Không có dữ liệu!"}
+            />
+          ) : (
+            <div className='flex flex-wrap justify-center'>
+              {data.map((data) => (
+                <EventCard event={data?.event} tickets={data?.tickets} typeList={typeList} key={data?.event._id} />
+              ))}
+            </div>
+          )
+        )}
 
-      {!isEmptyData && currentPage <= totalPages && (
-        <h4 className='section-header w-full my-2 text-xl'>
-          <span 
-            className='hover:cursor-pointer hover:underline'
-            onClick={viewMoreEvents}
-          >
-            Xem thêm
-          </span>
-        </h4>
-      )}
+        {!isEmptyData && currentPage <= totalPages && (
+          <h4 className='section-header w-full my-2 text-xl'>
+            <span
+              className='hover:cursor-pointer hover:underline'
+              onClick={viewMoreEvents}
+            >
+              Xem thêm
+            </span>
+          </h4>
+        )}
       </div>
     </section>
-)}
+  )
+}

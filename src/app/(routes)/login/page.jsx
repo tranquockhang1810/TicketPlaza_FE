@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Button, Divider, message } from 'antd';
 import { ArrowLeftOutlined, GoogleOutlined } from '@ant-design/icons';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useUser } from '@/src/context/UserContext';
 import api from '../../api/api';
 import ApiPath from '../../api/apiPath';
@@ -16,6 +16,7 @@ export default function Login() {
   } = useUser();
   const router = useRouter();
 	const [form] = Form.useForm();
+  const search = useSearchParams();
 
   const handleGoogleSignIn = () => {
     try {
@@ -46,6 +47,10 @@ export default function Login() {
 			if(!!res?.data) {
 				message.success(res?.message);
         onSignIn(res?.data[0]);
+        if (search.get('order')) {
+          router.push(`/events/${search.get('order')}`);  
+          return;
+        }
         if (res?.data[0]?.data?.type !== 0) {
           router.push("/admin");
         } else router.push("/");

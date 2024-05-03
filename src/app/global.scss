@@ -331,3 +331,9 @@ body,
 .bar-chart{
   width: 100% !important;
 }
+
+.collapse-center-icon{
+  .ant-collapse-header{
+    align-items: center !important;
+  }
+}

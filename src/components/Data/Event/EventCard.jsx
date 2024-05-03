@@ -1,6 +1,7 @@
 import { Card, Tooltip } from "antd";
 import { EnvironmentOutlined, ClockCircleOutlined, TagOutlined, EyeOutlined, DollarCircleOutlined } from '@ant-design/icons';
 import { formatRangeDate } from "@/src/utils/DateFormatter";
+import { useRouter } from "next/navigation";
 
 const getTicketPricesRange = (tickets) => {
   if(tickets?.length === 0) return `Miễn phí`;
@@ -18,6 +19,8 @@ const getTicketPricesRange = (tickets) => {
 }
 
 export default function EventCard({ event, tickets, typeList }) {
+  const router = useRouter();
+
   const RenderType = (id) => {
     const foundType = typeList.find((item) => item?.typeId === id);
     if (foundType) {
@@ -34,6 +37,7 @@ export default function EventCard({ event, tickets, typeList }) {
         cover={<img className="transition-transform duration-300 transform scale-100 group-hover:scale-110" alt="eventImg" src={event?.photo} />}
         actions={[<span>MUA VÉ NGAY</span>]}
         className="w-[320px] event-card"
+        onClick={() => router.push(`/events/${event._id}`)}
     >
       <Tooltip title={event?.name} placement="topLeft" arrow={false}>
         <h1 className='font-bold text-base truncate'>{event?.name}</h1>

@@ -6,11 +6,11 @@ export const metadata = {
 	description: 'Hệ thống mua vé sự kiện',
 }
 
-export default function Homepage(){
-	return(
-			<Layout>
-				<EventsSection header={"SỰ KIỆN HOT"}/>
-				<Promotion/>
-			</Layout>
+export default function Homepage() {
+	return (
+		<Layout>
+			<EventsSection header={"SỰ KIỆN HOT"} />
+			<Promotion />
+		</Layout>
 	)
 }

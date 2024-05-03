@@ -30,7 +30,6 @@ export const getDiffDate = (start, end) => {
   return endDate.diff(startDate, 'day');
 }
 
-
 export const DateTimeFormat = "DD/MM/YYYY | HH:mm";
 
 export const DateFormat = 'DD/MM/YYYY';

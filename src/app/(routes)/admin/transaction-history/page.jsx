@@ -9,6 +9,7 @@ import ApiPath from "@/src/app/api/apiPath";
 import { DateTimeFormat, formatDate } from "@/src/utils/DateFormatter";
 import dayjs from 'dayjs'
 import BillDetailModal from "./DetailModal";
+import { convertComponentToEmailHtml } from "@/src/utils/EmailHTML";
 
 const data = [
   {
@@ -381,7 +382,7 @@ export default function TransactionHistory() {
     <>
       <Form form={form} layout="vertical" className="p-4" onFinish={getTransactionList}>
         <Row gutter={12} className="flex justify-start">
-          <Col xs={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 8 }} xxl={{ span: 6 }}>
+          <Col xs={{ span: 24 }} md={{ span: 12 }} lg={{ span: 10 }} xl={{ span: 8 }} xxl={{ span: 8 }}>
             <Form.Item
               name="billId"
               label={<span className="text-white font-bold">Mã hóa đơn</span>}
@@ -389,7 +390,7 @@ export default function TransactionHistory() {
               <Input placeholder="Nhập mã hóa đơn" allowClear/>
             </Form.Item>
           </Col>
-          <Col xs={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 8 }} xxl={{ span: 6 }}>
+          <Col xs={{ span: 24 }} md={{ span: 12 }} lg={{ span: 10 }} xl={{ span: 8 }} xxl={{ span: 8 }}>
             <Form.Item
               name="eventId"
               label={<span className="text-white font-bold">Tên sự kiện</span>}
@@ -407,7 +408,7 @@ export default function TransactionHistory() {
               />
             </Form.Item>
           </Col>
-          <Col xs={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 8 }} xxl={{ span: 6 }}>
+          <Col xs={{ span: 24 }} md={{ span: 12 }} lg={{ span: 10 }} xl={{ span: 8 }} xxl={{ span: 8 }}>
             <Form.Item
               name="email"
               label={<span className="text-white font-bold">Email khách hàng</span>}
@@ -415,7 +416,7 @@ export default function TransactionHistory() {
               <Input placeholder="Nhập tên sự kiện" allowClear/>
             </Form.Item>
           </Col>
-          <Col xs={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 8 }} xxl={{ span: 6 }}>
+          <Col xs={{ span: 24 }} md={{ span: 12 }} lg={{ span: 10 }} xl={{ span: 8 }} xxl={{ span: 8 }}>
             <Form.Item
               name="date"
               label={<span className="text-white font-bold">Khoảng ngày</span>}
@@ -428,7 +429,7 @@ export default function TransactionHistory() {
               />
             </Form.Item>
           </Col>
-          <Col xs={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 8 }} xxl={{ span: 6 }}>
+          <Col xs={{ span: 24 }} md={{ span: 12 }} lg={{ span: 10 }} xl={{ span: 8 }} xxl={{ span: 8 }}>
             <Form.Item
               name="status"
               label={<span className="text-white font-bold">Trạng thái</span>}
@@ -460,7 +461,7 @@ export default function TransactionHistory() {
           size="middle"
           columns={columnsTable}
           dataSource={transactionList}
-          scroll={{x: 1200, y: 1000}}
+          scroll={{x: 1200}}
           loading={loading}
           pagination={{
             pageSize: limit,

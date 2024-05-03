@@ -1,12 +1,9 @@
 import api from "@/src/app/api/api";
 import ApiPath from "@/src/app/api/apiPath";
-import { Modal, Button, Form, Spin, Input, message, DatePicker, Select, Table } from "antd";
+import { Modal, Form, Spin, message, Table } from "antd";
 import { useEffect, useState } from "react";
-import confirm from "antd/es/modal/confirm";
 import { colorTextDisplay, getItemWithColor, IndexDisplay, CurrencyDisplay } from "@/src/utils/DisplayHelper";
-import dayjs from 'dayjs'
-import { dateWithUct, DateTimeFormat, formatDate } from "@/src/utils/DateFormatter";
-import { render } from "react-dom";
+import { formatDate } from "@/src/utils/DateFormatter";
 
 export default function BillDetailModal({
   record,

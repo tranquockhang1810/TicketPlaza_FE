@@ -23,6 +23,7 @@ export const ApiPath = {
 
   //Event
   GET_EVENT_LIST: getDefaultPath('events'),
+  GET_EVENT_DETAIL: getDefaultPath('events/getEventDetail'),
   UPLOAD_IMAGE: getDefaultPath('events/upload'),
   DEACTIVATE_EVENT:getDefaultPath('events/deactivateEvent'),
   ACTIVATE_EVENT: getDefaultPath('events/activateEvent'),
@@ -44,6 +45,8 @@ export const ApiPath = {
   //Transaction
   GET_TRANSACTIONS: getDefaultPath('bills'),
   GET_BILL_DETAIL: getDefaultPath('bills/getBillDetail'),
+  CREATE_BILL: getDefaultPath('bills'),
+  MOMO_PAID: getDefaultPath('bills/momo'),
 };
 
 function getDefaultPath(path) {

@@ -157,7 +157,7 @@ export default function EventType() {
       </div>
       <Form form={form} layout="vertical" className="p-4" onFinish={getTypeList}>
         <Row gutter={12} className="flex justify-between">
-          <Col xs={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 8 }} xxl={{ span: 6 }}>
+          <Col xs={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 8 }} xxl={{ span: 8 }}>
             <Form.Item
               name="eventTypeName"
               label={<span className="text-white font-bold">Tên thể loại</span>}
@@ -165,7 +165,7 @@ export default function EventType() {
               <Input placeholder="Nhập tên thể loại" allowClear/>
             </Form.Item>
           </Col>
-          <Col xs={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 8 }} xxl={{ span: 6 }}>
+          <Col xs={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 8 }} xxl={{ span: 8 }}>
             <Form.Item
               name="typeId"
               label={<span className="text-white font-bold">Mã thể loại</span>}
@@ -173,7 +173,7 @@ export default function EventType() {
               <Input placeholder="Nhập mã thể loại" allowClear/>
             </Form.Item>
           </Col>
-          <Col xs={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 8 }} xxl={{ span: 6 }}>
+          <Col xs={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 8 }} xxl={{ span: 8 }}>
             <Form.Item
               name="status"
               label={<span className="text-white font-bold">Trạng thái</span>}
