@@ -7,13 +7,13 @@ import {
   DatePicker,
   message
 } from 'antd';
-import {EyeOutlined} from '@ant-design/icons'
+import { EyeOutlined } from '@ant-design/icons'
 import React, { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
-import { 
-  DateFormat, 
-  MonthFormat, 
-  formatDate ,
+import {
+  DateFormat,
+  MonthFormat,
+  formatDate,
   YearFormat
 } from '@/src/utils/DateFormatter';
 import CountUp from 'react-countup';
@@ -30,13 +30,13 @@ export default function Views() {
   const [totalMonth, setTotalMonth] = useState(0);
   const [totalYear, setTotalYear] = useState(0);
   const [chartData, setChartData] = useState();
-  const [rangeDay, setRangeDay] = useState([dayjs().startOf('month'), dayjs().endOf('month')]);
+  const [rangeDay, setRangeDay] = useState([dayjs().startOf('year'), dayjs().endOf('year')]);
 
-  const formatter = (value) => 
+  const formatter = (value) =>
     <CountUp
-      end={value} 
+      end={value}
     />;
-  
+
   const handleDateChange = (values) => {
     setRangeDay(values)
   }
@@ -44,80 +44,13 @@ export default function Views() {
   const generateRandomColor = (numColors) => {
     const randomColor = () => Math.floor(Math.random() * 256);
     const colors = [];
-  
+
     for (let i = 0; i < numColors; i++) {
       const color = `rgba(${randomColor()}, ${randomColor()}, ${randomColor()}, 0.3)`;
       colors.push(color);
     }
-  
+
     return colors;
-  }
-
-  const getTotalFromArray = (profit) => {
-    const totalProfit = profit.reduce((acc, curr) => acc + curr, 0);
-    return totalProfit;
-  }
-
-  const DataByDate = async (params, type) => {
-    try {
-      setLoading(true);
-      const res = await api.get(ApiPath.GET_VIEWS, { params });
-      if(res?.data) {
-        const profit = getTotalFromArray(res?.data[0].viewList);
-        switch (type) {
-          case "day":
-            setTotalDay(profit);
-            break;
-          case "month":
-            setTotalMonth(profit);
-            break;
-          case "year":
-            setTotalYear(profit);
-            break;
-          default:
-            break;
-        }
-      } else {
-        message.error(res?.error?.message || "Đã có lỗi xảy ra! Vui lòng thử lại!");
-      }
-    } catch (error) {
-      console.error(error);
-      message.error("Đã có lỗi xảy ra! Vui lòng thử lại!");
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const getTotal = async () => {
-    try {
-      setLoading(true);
-      const paramsByDay = {
-        host: isSuperAdmin() ? undefined : user._id,
-        member: isSuperAdmin() ? undefined : user._id,
-        startDate: formatDate(rangeDay[0]),
-        endDate: formatDate(rangeDay[1])
-      }
-      const paramsByMonth = {
-        host: isSuperAdmin() ? undefined : user._id,
-        member: isSuperAdmin() ? undefined : user._id,
-        startDate: formatDate(rangeDay[0].startOf('month')),
-        endDate: formatDate(rangeDay[1].endOf('month'))
-      }
-      const paramsByYear = {
-        host: isSuperAdmin() ? undefined : user._id,
-        member: isSuperAdmin() ? undefined : user._id,
-        startDate: formatDate(rangeDay[0].startOf('year')),
-        endDate: formatDate(rangeDay[1].endOf('year'))
-      }
-      await DataByDate(paramsByDay, 'day');
-      await DataByDate(paramsByMonth, 'month');
-      await DataByDate(paramsByYear, 'year');
-    } catch (error) {
-      console.error(error);
-      message.error("Đã có lỗi xảy ra! Vui lòng thử lại!");
-    } finally {
-      setLoading(false);
-    }
   }
 
   const getChartData = async () => {
@@ -130,7 +63,7 @@ export default function Views() {
         endDate: formatDate(rangeDay[1])
       }
       const res = await api.get(ApiPath.GET_VIEWS, { params });
-      if(res?.data) {
+      if (res?.data) {
         const colors = generateRandomColor(res?.data[0].data.length);
         const data = {
           labels: res?.data[0].data,
@@ -156,74 +89,32 @@ export default function Views() {
   }
 
   useEffect(() => {
-    getTotal();
-  }, []);
-
-  useEffect(() => {
     getChartData();
   }, [rangeDay])
 
   return (
     <>
-      <Row gutter={16}>
-        <Col span={8}>
-          <Card bordered={false} className='m-4' loading={loading}>
-            <Statistic
-              title={`Lượt quan tâm theo ngày: ${formatDate(dayjs(), DateFormat)}`}
-              value={totalDay}
-              valueStyle={{
-                color: '#3f8600',
-              }}
-              prefix={<EyeOutlined />}
-              formatter={formatter}
-            />
-          </Card>
-        </Col>
-        <Col span={8}>
-          <Card bordered={false} className='m-4' loading={loading}>
-            <Statistic
-              title={`Lượt quan tâm theo tháng: ${formatDate(dayjs(), MonthFormat)}`}
-              value={totalMonth}
-              valueStyle={{
-                color: '#3f8600',
-              }}
-              prefix={<EyeOutlined />}
-              formatter={formatter}
-            />
-          </Card>
-        </Col>
-        <Col span={8}>
-          <Card bordered={false} className='m-4' loading={loading}>
-            <Statistic
-              title={`Lượt quan tâm theo năm: ${formatDate(dayjs(), YearFormat)}`}
-              value={totalYear}
-              valueStyle={{
-                color: '#3f8600',
-              }}
-              prefix={<EyeOutlined />}
-              formatter={formatter}
-            />
-          </Card>
-        </Col>
-      </Row>
-      <div className='mx-4'>
+      <div className='p-4'>
         <Card
-          className='max-h-[75vh] overflow-y-auto'
+          className='max-h-[90vh] pt-4 overflow-y-auto'
           loading={chartLoading}
           title={
             <div className='flex justify-between'>
               <div className='font-bold text-2xl'>BIỂU ĐỒ LƯỢT QUAN TÂM</div>
-              <DatePicker.RangePicker 
-                value={rangeDay}
-                onChange={handleDateChange}
-                format={DateFormat}
-                allowClear={false}
-              />
+              <div>
+                <span className='mr-4'>Thời gian diễn ra sự kiện:</span>
+                <DatePicker.RangePicker
+                  value={rangeDay}
+                  onChange={handleDateChange}
+                  format={DateFormat}
+                  allowClear={false}
+                />
+              </div>
             </div>
           }
         >
-          {chartData && 
-            <BarChart 
+          {chartData &&
+            <BarChart
               options={{
                 responsive: true,
                 scales: {
@@ -231,7 +122,7 @@ export default function Views() {
                     beginAtZero: true
                   }
                 },
-              }} 
+              }}
               data={chartData}
             />
           }

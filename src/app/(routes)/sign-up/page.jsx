@@ -1,6 +1,6 @@
 'use client'
 import React, { useState, useEffect } from 'react';
-import { Form, Input, Button, message, InputNumber, DatePicker } from 'antd';
+import { Form, Input, Button, message, Space, DatePicker } from 'antd';
 import { ArrowLeftOutlined, GoogleOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@/src/context/UserContext';
@@ -11,12 +11,13 @@ import dayjs from 'dayjs';
 
 export default function SignUp() {
   const [loading, setLoading] = useState(false);
+  const [emailLoading, setEmailLoading] = useState(false);
   const {
     user,
     onSignIn
   } = useUser();
   const router = useRouter();
-	const [form] = Form.useForm();
+  const [form] = Form.useForm();
 
   const handleKeyPress = (e) => {
     if ((e.keyCode < 48 || e.keyCode > 57) && e.keyCode !== 8) {
@@ -36,20 +37,32 @@ export default function SignUp() {
         message.error("Mật khẩu xác nhận chưa chính xác!");
         return;
       }
+      const { email, emailOTP } = form.getFieldValue();
       const params = {
+        email,
+        otp: emailOTP
+      }
+      const otpRes = await api.post(ApiPath.VERIFY_OTP, {}, { params })
+      if(otpRes?.data[0]?.status === 0) {
+        message.success(otpRes?.message);
+      } else {
+        message.error(otpRes?.message);
+        return;
+      }
+      const body = {
         fullName: form.getFieldValue("fullName"),
         email: form.getFieldValue("email"),
         password: form.getFieldValue("password"),
         phone: form.getFieldValue("phone"),
         birthDay: formatDate(form.getFieldValue("birthDay"))
       }
-      const res = await api.post(ApiPath.SIGNUP, params);
-      if(!!res?.data) {
-        if(res?.message === "Email đã được sử dụng!") {
+      const res = await api.post(ApiPath.SIGNUP, body);
+      if (!!res?.data) {
+        if (res?.message === "Email đã được sử dụng!") {
           message.error(res?.message);
           return;
         }
-				message.success(res?.message);
+        message.success(res?.message);
         onSignIn(res?.data[0]);
         router.push("/");
       } else {
@@ -98,21 +111,66 @@ export default function SignUp() {
             name="email"
             rules={[{ required: true, message: <span style={{ color: 'white' }}>Vui lòng nhập email!</span> }]}
           >
-            <Input type='email' placeholder='Nhập email' />
+            <Space.Compact
+              className="w-full"
+            >
+              <Input type='email' placeholder='Nhập email' />
+              <Button
+                loading={emailLoading}
+                className='main-button'
+                onClick={async () => {
+                  try {
+                    setEmailLoading(true)
+                    const { email } = form.getFieldValue();
+                    if (!email) {
+                      message.error("Vui lòng nhập email!");
+                      return;
+                    }
+                    const params = { email }
+                    const res = await api.post(ApiPath.VERIFY_EMAIL, {}, { params })
+                    if (res?.data[0]?.status) {
+                      message.success(res?.message);
+                    } else {
+                      message.error(res?.message);
+                    }
+                  } catch (error) {
+                    console.error(error)
+                    message.error("Đã có lỗi xảy ra!");
+                  } finally {
+                    setEmailLoading(false);
+                  }
+                }}
+              >
+                Nhận OTP
+              </Button>
+            </Space.Compact>
+          </Form.Item>
+          <Form.Item
+            label={<span className="text-white font-bold">Mã xác thực Email</span>}
+            name="emailOTP"
+            rules={[{ required: true, message: <span style={{ color: 'white' }}>Vui lòng nhập mã xác thực email!</span> }]}
+          >
+            <Input
+              minLength={4}
+              maxLength={4}
+              onKeyDown={handleKeyPress}
+              className='w-full'
+              placeholder='Nhập mã xác nhận email'
+            />
           </Form.Item>
           <Form.Item
             label={<span className="text-white font-bold">Số điện thoại</span>}
             name="phone"
             rules={[
               { required: true, message: <span style={{ color: 'white' }}>Vui lòng nhập số điện thoại!</span> },
-              { min: 10, message: <span style={{ color: 'white' }}>Số điện thoại phải đủ 10 số!</span>}
+              { min: 10, message: <span style={{ color: 'white' }}>Số điện thoại phải đủ 10 số!</span> }
             ]}
           >
-            <Input 
-              className='w-full' 
-              maxLength={10} 
-              controls={false} 
-              placeholder='Nhập số điện thoại' 
+            <Input
+              className='w-full'
+              maxLength={10}
+              controls={false}
+              placeholder='Nhập số điện thoại'
               onKeyDown={handleKeyPress}
             />
           </Form.Item>

@@ -6,6 +6,7 @@ export const ApiPath = {
   SIGNUP: getDefaultPath("users/signup"),
   SEND_EMAIL: getDefaultPath("users/forgotPassword"),
   VERIFY_OTP: getDefaultPath("users/verifyOTP"),
+  VERIFY_EMAIL: getDefaultPath("users/verifyEmail"),
   RESET_PASSWORD: getDefaultPath("users/changePassword"),
 
   //User

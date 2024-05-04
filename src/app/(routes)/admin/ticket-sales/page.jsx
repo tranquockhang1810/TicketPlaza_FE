@@ -94,8 +94,8 @@ export default function Views() {
       const paramsByDay = {
         host: isSuperAdmin() ? undefined : user._id,
         member: isSuperAdmin() ? undefined : user._id,
-        startDate: formatDate(rangeDay[0]),
-        endDate: formatDate(rangeDay[1])
+        startDate: formatDate(dayjs().startOf('date')),
+        endDate: formatDate(dayjs().endOf('date'))
       }
       const paramsByMonth = {
         host: isSuperAdmin() ? undefined : user._id,
