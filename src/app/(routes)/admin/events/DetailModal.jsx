@@ -5,6 +5,7 @@ import { AppstoreOutlined, TagOutlined, TeamOutlined, MessageOutlined} from '@an
 import Tab01 from "./Tab01";
 import Tab02 from './Tab02';
 import Tab03 from './Tab03';
+import Tab04 from './Tab04';
 
 const { TabPane } = Tabs;
 
@@ -58,7 +59,9 @@ const EventModal = ({
           />
         </TabPane>
         <TabPane tab="Phản hồi" key="4" icon={<MessageOutlined />}>
-          {/* Thêm nội dung cho tab thứ 4 nếu cần */}
+          <Tab04
+            event={record}
+          />
         </TabPane>
       </Tabs>
     </Modal>

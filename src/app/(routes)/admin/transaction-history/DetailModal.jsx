@@ -1,6 +1,6 @@
 import api from "@/src/app/api/api";
 import ApiPath from "@/src/app/api/apiPath";
-import { Modal, Form, Spin, message, Table } from "antd";
+import { Modal, Form, Spin, message, Table, QRCode } from "antd";
 import { useEffect, useState } from "react";
 import { colorTextDisplay, getItemWithColor, IndexDisplay, CurrencyDisplay } from "@/src/utils/DisplayHelper";
 import { formatDate } from "@/src/utils/DateFormatter";
@@ -9,7 +9,8 @@ export default function BillDetailModal({
   record,
   showModal,
   setShowModal,
-  statusList
+  statusList,
+  client
 }) {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
@@ -59,10 +60,10 @@ export default function BillDetailModal({
         billId: record?._id
       }
       const res = await api.get(ApiPath.GET_BILL_DETAIL, { params });
-      if(res?.data[0].data) {
+      if (res?.data[0].data) {
         setDetail(res?.data[0]?.data);
       } else {
-        message.error( res?.error?.message || "Đã có lỗi xảy ra");
+        message.error(res?.error?.message || "Đã có lỗi xảy ra");
       }
     } catch (error) {
       console.error(error);
@@ -73,14 +74,15 @@ export default function BillDetailModal({
   }
 
   const RenderStatus = (status) => {
-    const {title, color} = getItemWithColor(statusList,status);
+    const { title, color } = getItemWithColor(statusList, status);
     return colorTextDisplay(title, color);
   }
 
   useEffect(() => {
-    getBillDetail();
-  },[showModal])
-  
+    if (showModal)
+      getBillDetail();
+  }, [showModal])
+
   return (
     <Spin spinning={loading} >
       <Modal
@@ -93,13 +95,23 @@ export default function BillDetailModal({
         footer={null}
       >
         <Form layout="horizontal" form={form} className="mt-4">
-          <Form.Item
-            label={<span className="font-bold">Mã hóa đơn</span>}
-          >
-            <div className="text-right">
-              <span>{detail?._id}</span>
+          {!client ? (
+            <Form.Item
+              label={<span className="font-bold">Mã hóa đơn</span>}
+            >
+              <div className="text-right">
+                <span>{detail?._id}</span>
+              </div>
+            </Form.Item>
+          ) : (
+            <div className="flex justify-between">
+              <span className="font-bold">QR Check-in</span>
+              <div className="self-end">
+                <QRCode value={detail?._id} size={100}/>
+              </div>
             </div>
-          </Form.Item>
+          )}
+
           <Form.Item
             label={<span className="font-bold">Thời gian tạo</span>}
           >

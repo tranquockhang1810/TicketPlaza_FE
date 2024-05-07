@@ -48,6 +48,10 @@ export const ApiPath = {
   GET_BILL_DETAIL: getDefaultPath('bills/getBillDetail'),
   CREATE_BILL: getDefaultPath('bills'),
   MOMO_PAID: getDefaultPath('bills/momo'),
+
+  // Feedbacks
+  SEND_FEEDBACK: getDefaultPath('feetbacks'),
+  GET_FEEDBACKS_LIST: getDefaultPath('feetbacks'),
 };
 
 function getDefaultPath(path) {

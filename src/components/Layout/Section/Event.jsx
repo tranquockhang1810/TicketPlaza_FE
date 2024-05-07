@@ -17,7 +17,6 @@ export default function EventsSection({ header, filter, limit }) {
   const [type, setType] = useState("");
   const [dateRange, setDateRange] = useState([dayjs().startOf('year'), dayjs().endOf('year')]);
   const [isEmptyData, setIsEmptyData] = useState(false);
-  const [sort, setSort] = useState("view");
 
   const router = useRouter();
   const path = usePathname();
@@ -63,7 +62,6 @@ export default function EventsSection({ header, filter, limit }) {
         startDate: date ? date[0].format("M/D/YYYY") : dateRange[0].format("M/D/YYYY"),
         endDate: date ? date[1].format("M/D/YYYY") : dateRange[1].format("M/D/YYYY"),
         page: currentPage,
-        sort: sort,
         ticket: true,
         limit: limit || 8,
         status: 0,
@@ -100,7 +98,7 @@ export default function EventsSection({ header, filter, limit }) {
   useEffect(() => {
     getEventTypeList();
     fetchData();
-  }, [currentPage, type, dateRange, path, searchParams, sort]);
+  }, [currentPage, type, dateRange, path, searchParams]);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -169,7 +167,7 @@ export default function EventsSection({ header, filter, limit }) {
                   />
                 </Form.Item>
               </Col>
-              <Col xs={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 6 }} xxl={{ span: 6 }}>
+              {/* <Col xs={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 6 }} xxl={{ span: 6 }}>
                 <Form.Item
                   name="sortType"
                   label={<span className="font-bold secondary-color text-xl">Xếp theo</span>}
@@ -183,7 +181,7 @@ export default function EventsSection({ header, filter, limit }) {
                     onChange={(value) => setSort(value)}
                   />
                 </Form.Item>
-              </Col>
+              </Col> */}
             </Row>
           </Form>
         )}

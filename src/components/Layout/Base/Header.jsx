@@ -22,6 +22,7 @@ const HEADERS = [
 
 const AccountOptions = [
   { key: 'profile', label: 'Thông tin'},
+  { key: 'bills', label: 'Lịch sử vé'},
   { key: 'admin', label: 'Dành cho Admin' },
   { key: 'logout', label: 'Đăng xuất' }
 ];
@@ -129,6 +130,7 @@ const MobileMenu = ({history}) => {
   if (isAuthenticated()) {
     MobileItems[0].children = [
       { key: 'profile', icon: null, children: null, label: 'Thông tin' },
+      { key: 'bills', icon: null, children: null, label: 'Lịch sử vé' },
       { key: 'admin', icon: null, children: null, label: 'Dành cho Admin' },
       { key: 'logout', icon: null, children: null, label: 'Đăng xuất' },
     ];
