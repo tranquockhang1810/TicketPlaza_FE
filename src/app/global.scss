@@ -337,3 +337,19 @@ body,
     align-items: center !important;
   }
 }
+
+.sider-menu {
+  .ant-layout-sider-children {
+    background-color: $color-primary;
+  }
+}
+
+.img-crop {
+  .ant-btn-primary{
+    background-color: $color-secondary !important;
+  }
+}
+
+#reader {
+  border: 0 !important;
+}

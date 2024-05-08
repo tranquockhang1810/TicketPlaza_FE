@@ -9,10 +9,10 @@ import {
 } from 'antd';
 import React, { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
-import { 
-  DateFormat, 
-  MonthFormat, 
-  formatDate ,
+import {
+  DateFormat,
+  MonthFormat,
+  formatDate,
   YearFormat
 } from '@/src/utils/DateFormatter';
 import CountUp from 'react-countup';
@@ -31,11 +31,11 @@ export default function Profit() {
   const [chartData, setChartData] = useState();
   const [rangeDay, setRangeDay] = useState([dayjs().startOf('month'), dayjs().endOf('month')]);
 
-  const formatter = (value) => 
+  const formatter = (value) =>
     <CountUp
-      end={value} 
+      end={value}
     />;
-  
+
   const handleDateChange = (values) => {
     setRangeDay(values)
   }
@@ -43,12 +43,12 @@ export default function Profit() {
   const generateRandomColor = (numColors) => {
     const randomColor = () => Math.floor(Math.random() * 256);
     const colors = [];
-  
+
     for (let i = 0; i < numColors; i++) {
       const color = `rgba(${randomColor()}, ${randomColor()}, ${randomColor()}, 0.3)`;
       colors.push(color);
     }
-  
+
     return colors;
   }
 
@@ -61,7 +61,7 @@ export default function Profit() {
     try {
       setLoading(true);
       const res = await api.get(ApiPath.GET_PROFIT, { params });
-      if(res?.data) {
+      if (res?.data) {
         const profit = getTotalFromArray(res?.data[0].revenueList);
         switch (type) {
           case "day":
@@ -111,7 +111,7 @@ export default function Profit() {
       await DataByDate(paramsByDay, 'day');
       await DataByDate(paramsByMonth, 'month');
       await DataByDate(paramsByYear, 'year');
-      
+
     } catch (error) {
       console.error(error);
       message.error("Đã có lỗi xảy ra! Vui lòng thử lại!");
@@ -131,7 +131,7 @@ export default function Profit() {
       }
       console.log(params);
       const res = await api.get(ApiPath.GET_PROFIT, { params });
-      if(res?.data) {
+      if (res?.data) {
         const colors = generateRandomColor(res?.data[0].eventNameList.length);
         const data = {
           labels: res?.data[0].eventNameList,
@@ -166,47 +166,41 @@ export default function Profit() {
 
   return (
     <>
-      <Row gutter={16}>
-        <Col span={8}>
-          <Card bordered={false} className='m-4' loading={loading}>
-            <Statistic
-              title={`Doanh thu theo ngày: ${formatDate(dayjs(), DateFormat)}`}
-              value={totalDay}
-              valueStyle={{
-                color: '#3f8600',
-              }}
-              suffix="VNĐ"
-              formatter={formatter}
-            />
-          </Card>
-        </Col>
-        <Col span={8}>
-          <Card bordered={false} className='m-4' loading={loading}>
-            <Statistic
-              title={`Doanh thu theo tháng: ${formatDate(dayjs(), MonthFormat)}`}
-              value={totalMonth}
-              valueStyle={{
-                color: '#3f8600',
-              }}
-              suffix="VNĐ"
-              formatter={formatter}
-            />
-          </Card>
-        </Col>
-        <Col span={8}>
-          <Card bordered={false} className='m-4' loading={loading}>
-            <Statistic
-              title={`Doanh thu theo năm: ${formatDate(dayjs(), YearFormat)}`}
-              value={totalYear}
-              valueStyle={{
-                color: '#3f8600',
-              }}
-              suffix="VNĐ"
-              formatter={formatter}
-            />
-          </Card>
-        </Col>
-      </Row>
+      <div className='flex flex-wrap justify-between w-full'>
+        <Card bordered={false} className='m-4 lg:w-[29%] w-full' loading={loading}>
+          <Statistic
+            title={`Doanh thu theo ngày: ${formatDate(dayjs(), DateFormat)}`}
+            value={totalDay}
+            valueStyle={{
+              color: '#3f8600',
+            }}
+            suffix="VNĐ"
+            formatter={formatter}
+          />
+        </Card>
+        <Card bordered={false} className='m-4 lg:w-[29%] w-full ' loading={loading}>
+          <Statistic
+            title={`Doanh thu theo tháng: ${formatDate(dayjs(), MonthFormat)}`}
+            value={totalMonth}
+            valueStyle={{
+              color: '#3f8600',
+            }}
+            suffix="VNĐ"
+            formatter={formatter}
+          />
+        </Card>
+        <Card bordered={false} className='m-4 lg:w-[29%] w-full ' loading={loading}>
+          <Statistic
+            title={`Doanh thu theo năm: ${formatDate(dayjs(), YearFormat)}`}
+            value={totalYear}
+            valueStyle={{
+              color: '#3f8600',
+            }}
+            suffix="VNĐ"
+            formatter={formatter}
+          />
+        </Card>
+      </div>
       <div className='mx-4'>
         <Card
           className='max-h-[75vh] overflow-y-auto'
@@ -214,7 +208,7 @@ export default function Profit() {
           title={
             <div className='flex justify-between'>
               <div className='font-bold text-2xl'>BIỂU ĐỒ DOANH SỐ</div>
-              <DatePicker.RangePicker 
+              <DatePicker.RangePicker
                 value={rangeDay}
                 onChange={handleDateChange}
                 format={DateFormat}
@@ -223,16 +217,17 @@ export default function Profit() {
             </div>
           }
         >
-          {chartData && 
-            <BarChart 
+          {chartData &&
+            <BarChart
               options={{
                 responsive: true,
+                maintainAspectRatio: false,
                 scales: {
                   y: {
                     beginAtZero: true
                   }
                 },
-              }} 
+              }}
               data={chartData}
             />
           }

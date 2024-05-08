@@ -1,7 +1,7 @@
 'use client'
 import api from "@/src/app/api/api";
 import ApiPath from "@/src/app/api/apiPath";
-import { Button, Form, Input,InputNumber, message, DatePicker, Select, Image, Upload } from "antd";
+import { Button, Form, Input, InputNumber, message, DatePicker, Select, Image, Upload, ConfigProvider } from "antd";
 import { UploadOutlined } from '@ant-design/icons'
 import ImgCrop from 'antd-img-crop';
 import { useEffect, useState } from "react";
@@ -29,7 +29,7 @@ export default function Tab01({
   const { user } = useUser();
 
   const RenderStatus = (status) => {
-    const {title, color} = getItemWithColor(statusList,status);
+    const { title, color } = getItemWithColor(statusList, status);
     return colorTextDisplay(title, color);
   }
 
@@ -51,12 +51,12 @@ export default function Tab01({
       };
       const params = { eventId: record?._id };
       let res = "";
-      if(forCreate) {
+      if (forCreate) {
         res = await api.post(ApiPath.CREATE_EVENT, body);
       } else {
         res = await api.patch(ApiPath.UPDATE_EVENT, body, { params });
       }
-      if (!!res?.data) {
+      if (res?.data[0]?.data) {
         message.success(res?.message);
         await getEvents();
         setShowModal(false);
@@ -82,10 +82,10 @@ export default function Tab01({
         onOk: async () => {
           try {
             setLoading(true);
-            const params = { eventId: record?._id};
+            const params = { eventId: record?._id };
             const body = {};
-            const res = await api.patch(ApiPath.ACTIVATE_EVENT, body ,{ params });
-            if(!!res?.data) {
+            const res = await api.patch(ApiPath.ACTIVATE_EVENT, body, { params });
+            if (!!res?.data) {
               await getEvents();
               message.success(res?.message);
               setShowModal(false);
@@ -113,13 +113,13 @@ export default function Tab01({
   function fileToBase64(file) {
     return new Promise((resolve, reject) => {
       if (!file || !file instanceof File) {
-          reject(new Error('Invalid file'));
-          return;
+        reject(new Error('Invalid file'));
+        return;
       }
       const reader = new FileReader();
-      reader.onload = function(event) {
-          const base64String = event.target.result;
-          resolve(base64String);
+      reader.onload = function (event) {
+        const base64String = event.target.result;
+        resolve(base64String);
       };
       reader.readAsDataURL(file);
     });
@@ -139,7 +139,7 @@ export default function Tab01({
           initialValue={record?.name}
           rules={[{ required: !isDisable, message: "Vui lòng nhập tên thể loại" }]}
         >
-          <Input className="text-right" readOnly={isDisable}/>
+          <Input className="text-right" readOnly={isDisable} />
         </Form.Item>
         {/* Thể loại */}
         <Form.Item
@@ -148,9 +148,9 @@ export default function Tab01({
           initialValue={record?.type}
           rules={[{ required: !isDisable, message: "Vui lòng nhập thể loại" }]}
         >
-          <Select 
-            className="text-right" 
-            options={typeList} 
+          <Select
+            className="text-right"
+            options={typeList}
             style={{ pointerEvents: isDisable ? 'none' : 'auto' }}
           />
         </Form.Item>
@@ -161,7 +161,7 @@ export default function Tab01({
           initialValue={record?.place}
           rules={[{ required: !isDisable, message: "Vui lòng nhập địa chỉ" }]}
         >
-          <Input className="text-right"  readOnly={isDisable}/>
+          <Input className="text-right" readOnly={isDisable} />
         </Form.Item>
         {/* Hiển thị Date */}
         {isDisable && (
@@ -172,9 +172,9 @@ export default function Tab01({
               record?.durationDate > 0
                 ? [dayjs(record?.date), dayjs(record?.date).add(record?.durationDate, 'day')]
                 : dayjs(record?.date)
-            }          
+            }
             rules={[{ required: !isDisable, message: 'Vui lòng nhập thời gian' }]}
-            style={{pointerEvents: 'none'}}
+            style={{ pointerEvents: 'none' }}
           >
             {isDisable && (
               record?.durationDate > 0 ? (
@@ -213,8 +213,8 @@ export default function Tab01({
               rules={[{ required: !isDisable, message: "Vui lòng chọn loại ngày" }]}
               initialValue={dateType}
             >
-              <Select 
-                onChange={(value) => { setDateType(value) }} 
+              <Select
+                onChange={(value) => { setDateType(value) }}
                 className="text-right">
                 <Select.Option value="single">Trong ngày</Select.Option>
                 <Select.Option value="range">Khoảng thời gian</Select.Option>
@@ -227,15 +227,15 @@ export default function Tab01({
                 rules={[{ required: true, message: "Vui lòng chọn ngày" }]}
                 initialValue={form.getFieldValue('date')}
               >
-                  <DatePicker.RangePicker
-                    className="w-full datePicker-text-right"
-                    suffixIcon={undefined}
-                    inputReadOnly={isDisable}
-                    readOnly={isDisable}
-                    allowClear={false}
-                    format={DateFormat}
-                    disabledDate={(current) => current && current < dayjs().startOf('day')}
-                  />
+                <DatePicker.RangePicker
+                  className="w-full datePicker-text-right"
+                  suffixIcon={undefined}
+                  inputReadOnly={isDisable}
+                  readOnly={isDisable}
+                  allowClear={false}
+                  format={DateFormat}
+                  disabledDate={(current) => current && current < dayjs().startOf('day')}
+                />
               </Form.Item>
             )}
             {dateType === 'single' && (
@@ -258,9 +258,9 @@ export default function Tab01({
                   disabledDate={(current) => current && current < dayjs().startOf('day')}
                   disabledTime={(current) => {
                     if (current && current.isSame(dayjs(), 'day')) {
-                        return {
-                            disabledHours: () => [...Array(dayjs().hour() + 1).keys()]
-                        };
+                      return {
+                        disabledHours: () => [...Array(dayjs().hour() + 1).keys()]
+                      };
                     }
                   }}
                 />
@@ -275,7 +275,7 @@ export default function Tab01({
           initialValue={record?.maxTicketPerBill}
           rules={[{ required: !isDisable, message: "Vui lòng nhập số vé tối đa" }]}
         >
-          <InputNumber min={1} controls={false} className="w-full inputNumber-text-right" readOnly={isDisable}/>
+          <InputNumber min={1} controls={false} className="w-full inputNumber-text-right" readOnly={isDisable} />
         </Form.Item>
         {/* Mô tả */}
         <Form.Item
@@ -283,35 +283,35 @@ export default function Tab01({
           name="description"
           initialValue={record?.description}
           rules={[
-            {required: forCreate, message: "Vui lòng nhập mô tả!"}
+            { required: forCreate, message: "Vui lòng nhập mô tả!" }
           ]}
         >
-          <Input.TextArea className="w-full text-right" minLength={10} autoSize={{ minRows: 1, maxRows: 20 }} readOnly={isDisable}/>
+          <Input.TextArea className="w-full text-right" minLength={10} autoSize={{ minRows: 1, maxRows: 20 }} readOnly={isDisable} />
         </Form.Item>
         {/* Hình ảnh */}
         <Form.Item
           label={<span className="font-bold">Hình ảnh</span>}
           name="photo"
           className="right-align-photo"
-          rules={[{ required: forCreate, message: "Vui lòng chọn hình ảnh!"}]}
+          rules={[{ required: forCreate, message: "Vui lòng chọn hình ảnh!" }]}
         >
           {isDisable ? (
             <Image src={record?.photo} width={200} height={200} />
           ) : (
             <div>
               <Image src={selectedImage ? URL.createObjectURL(selectedImage) : record?.photo} width={200} height={200} />
-              <ImgCrop rotationSlider>
+              <ImgCrop rotationSlider modalClassName="img-crop">
                 <Upload
                   beforeUpload={async (file) => {
                     try {
-                        const base64String = await fileToBase64(file);
-                        setSelectedImage(file);
-                        setImgBase64String(base64String);
+                      const base64String = await fileToBase64(file);
+                      setSelectedImage(file);
+                      setImgBase64String(base64String);
                     } catch (error) {
-                        console.error('Error:', error);
+                      console.error('Error:', error);
                     }
                     return false;
-                }}
+                  }}
                   showUploadList={false}
                   className="custom-upload"
                   action={null}
@@ -334,27 +334,27 @@ export default function Tab01({
       </Form>
       <div className="flex justify-end mt-4">
         {record?.status === 1 && isDisable && (
-          <Button 
-            type="primary" 
-            loading={loading} 
-            className="main-button" 
-            style={{backgroundColor: "green"}} 
+          <Button
+            type="primary"
+            loading={loading}
+            className="main-button"
+            style={{ backgroundColor: "green" }}
             onClick={ActivateType}
           >
             Kích hoạt
           </Button>
         )}
         {!isDisable && (
-          <Button type="default" 
+          <Button type="default"
             onClick={!forCreate ? ResetAll : () => setShowModal(false)}
           >
             Hủy
           </Button>
         )}
         {isDisable ? (
-          <Button type="primary" loading={loading} className="nav-button ml-2" 
-            onClick={()=> {
-              if(record?.status === 2) {
+          <Button type="primary" loading={loading} className="nav-button ml-2"
+            onClick={() => {
+              if (record?.status === 2) {
                 message.info("Không thể chỉnh sửa thông tin sự kiện đã diễn ra!");
                 return;
               }
@@ -364,7 +364,7 @@ export default function Tab01({
             Chỉnh sửa
           </Button>
         ) : (
-          <Button type="primary" loading={loading} className="nav-button ml-2" 
+          <Button type="primary" loading={loading} className="nav-button ml-2"
             onClick={handleSubmitButton}
           >
             Lưu

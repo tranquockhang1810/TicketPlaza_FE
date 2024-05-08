@@ -1,7 +1,7 @@
 'use client'
 import { Card, ConfigProvider, Button } from 'antd';
 import { EditOutlined, CommentOutlined, SettingOutlined } from '@ant-design/icons';
-import { DateTimeFormat, formatDate } from '@/src/utils/DateFormatter';
+import { isCheckinDate, formatDate } from '@/src/utils/DateFormatter';
 import { CurrencyDisplay } from '@/src/utils/DisplayHelper';
 import BillDetailModal from '@/src/app/(routes)/admin/transaction-history/DetailModal';
 import FeedBack from './FeedBack';
@@ -32,11 +32,11 @@ export default function BillCard({ bill, getBillList }) {
         <Card
           bordered={false}
           className='m-4 w-[600px]'
-          actions={bill?.feetbackStatus === 0 ? [
-            <Button className='nav-button' onClick={() => setShowFeedback(true)} icon={<CommentOutlined />}>Bình luận</Button>,
-            <Button className='nav-button' onClick={() => setShowDetail(true)} icon={<EditOutlined />}>Chi tiết</Button>,
+          actions={bill?.feetbackStatus === 0 && bill?.status === 2 ? [
+            <Button className='nav-button w-11/12' onClick={() => setShowFeedback(true)} icon={<CommentOutlined />}>Bình luận</Button>,
+            <Button className='nav-button w-11/12' onClick={() => setShowDetail(true)} icon={<EditOutlined />}>Chi tiết</Button>,
           ] : [
-            <Button className='nav-button' onClick={() => setShowDetail(true)} icon={<EditOutlined />}>Chi tiết</Button>,
+            <Button className='nav-button w-11/12' onClick={() => setShowDetail(true)} icon={<EditOutlined />}>Chi tiết</Button>,
           ]}
         >
           <div className='h-fit text-white'>

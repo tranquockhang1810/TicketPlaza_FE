@@ -73,7 +73,7 @@ export default function AccountInfo() {
       <h1 className="font-bold text-3xl text-white text-center pt-20">
         THÔNG TIN TÀI KHOẢN
       </h1>
-      <Form form={form} layout="vertical" className="px-80 py-4" onFinish={handleSubmitButton}>
+      <Form form={form} layout="vertical" className="xl:px-80 px-4 py-4" onFinish={handleSubmitButton}>
         <Form.Item
           name="fullName"
           label={<span className="text-white font-bold">Họ tên</span>}

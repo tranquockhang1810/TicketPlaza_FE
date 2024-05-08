@@ -1,5 +1,7 @@
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, QrcodeOutlined } from "@ant-design/icons";
 import { Button } from "antd";
+import { useRouter, usePathname } from "next/navigation";
+import { isCheckinDate } from "./DateFormatter";
 
 export function CurrencyDisplay (value) {
   let stringValue = `${value}`;
@@ -25,7 +27,9 @@ export function IndexDisplay (currentPage, limit, index, item, record) {
   return <span style={{ fontWeight: "bold" }}>{currentIndex}</span>;
 }
 
-export function RenderAction (Detail, Delete, item) {
+export function RenderAction (Detail, Delete, item, Checkin) {
+  const router = useRouter();
+  const path = usePathname();
   return (
     <div
       style={{
@@ -46,7 +50,6 @@ export function RenderAction (Detail, Delete, item) {
       </Button>
       {Delete && (
         <Button
-          title="Xóa"
           shape="round"
           type="text"
           style={{ color: "red" }}
@@ -56,12 +59,26 @@ export function RenderAction (Detail, Delete, item) {
           Xóa
         </Button>
       )}
+      {Checkin && (
+        <Button
+          shape="round"
+          type="text"
+          style={{ color: "green" }}
+          icon={<QrcodeOutlined />}
+          onClick={() => Checkin(item)}
+        >
+          Check-in
+        </Button>
+      )}
     </div>
   );
 }
 
-export function getItemWithColor (list, value) {
-  const item = list.find(item => item.value === value);
+export function getItemWithColor (list, value, record) {
+  let item = list.find(item => item.value === value);
+  if (record && isCheckinDate(record)) {
+    
+  }
   return item ? { title: item.label, color: item.color } : { title: '', color: '' };
 }
 

@@ -58,7 +58,7 @@ export default function ChangePassword() {
       <h1 className="font-bold text-3xl text-white text-center pt-20">
         ĐỔI MẬT KHẨU
       </h1>
-      <Form form={form} layout="vertical" className="px-80 py-4" onFinish={handleSubmitButton}>
+      <Form form={form} layout="vertical" className="xl:px-80 px-4 py-4" onFinish={handleSubmitButton}>
         <Form.Item
           label={<span className="text-white font-bold">Mật khẩu cũ</span>}
           name="oldPassword"

@@ -165,9 +165,8 @@ export default function Views() {
 
   return (
     <>
-      <Row gutter={16}>
-        <Col span={8}>
-          <Card bordered={false} className='m-4' loading={loading}>
+      <div className='flex flex-wrap justify-between w-full'>
+          <Card bordered={false} className='m-4 lg:w-[29%] w-full' loading={loading}>
             <Statistic
               title={`Lượng vé tiêu thụ theo ngày: ${formatDate(dayjs(), DateFormat)}`}
               value={totalDay}
@@ -178,9 +177,7 @@ export default function Views() {
               formatter={formatter}
             />
           </Card>
-        </Col>
-        <Col span={8}>
-          <Card bordered={false} className='m-4' loading={loading}>
+          <Card bordered={false} className='m-4 lg:w-[29%] w-full' loading={loading}>
             <Statistic
               title={`Lượng vé tiêu thụ theo tháng: ${formatDate(dayjs(), MonthFormat)}`}
               value={totalMonth}
@@ -191,9 +188,7 @@ export default function Views() {
               formatter={formatter}
             />
           </Card>
-        </Col>
-        <Col span={8}>
-          <Card bordered={false} className='m-4' loading={loading}>
+          <Card bordered={false} className='m-4 lg:w-[29%] w-full' loading={loading}>
             <Statistic
               title={`Lượng vé tiêu thụ theo năm: ${formatDate(dayjs(), YearFormat)}`}
               value={totalYear}
@@ -204,8 +199,7 @@ export default function Views() {
               formatter={formatter}
             />
           </Card>
-        </Col>
-      </Row>
+      </div>
       <div className='mx-4'>
         <Card
           className='max-h-[75vh] overflow-y-auto'
@@ -226,6 +220,7 @@ export default function Views() {
             <BarChart 
               options={{
                 responsive: true,
+                maintainAspectRatio: false,
                 scales: {
                   y: {
                     beginAtZero: true

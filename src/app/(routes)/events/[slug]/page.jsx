@@ -26,6 +26,8 @@ export default function Page({ params: slParams }) {
       const params = {
         eventId: slParams.slug
       }
+      const updateViewRes = await api.patch(ApiPath.UPDATE_VIEW, {}, { params })
+      if (updateViewRes?.data[0]?.data.length === 0) return;
       const res = await api.get(ApiPath.GET_EVENT_DETAIL, { params });
       if (res?.data[0]?.data) {
         setEvent(res?.data[0]?.data);

@@ -30,6 +30,21 @@ export const getDiffDate = (start, end) => {
   return endDate.diff(startDate, 'day');
 }
 
+export const isCheckinDate = (item) => {
+  let start, end;
+  if (item?.durationDate === 0) {
+    start = dayjs(item?.date);
+    end = start.endOf('date');
+  } else {
+    start = dayjs(item?.date).startOf('date');
+    end = start.add(item?.durationDate, 'day').endOf('date');
+  }
+  if (dayjs().isAfter(start) && dayjs().isBefore(end)) {
+    return true;
+  } 
+  return false;
+}
+
 export const DateTimeFormat = "DD/MM/YYYY | HH:mm";
 
 export const DateFormat = 'DD/MM/YYYY';

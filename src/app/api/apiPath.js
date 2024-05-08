@@ -30,6 +30,7 @@ export const ApiPath = {
   ACTIVATE_EVENT: getDefaultPath('events/activateEvent'),
   UPDATE_EVENT: getDefaultPath('events/updateEvent'),
   CREATE_EVENT: getDefaultPath('events'),
+  UPDATE_VIEW: getDefaultPath('events/updateEventView'),
 
   //Ticket
   GET_TICKETS: getDefaultPath('tickets'),
@@ -48,6 +49,7 @@ export const ApiPath = {
   GET_BILL_DETAIL: getDefaultPath('bills/getBillDetail'),
   CREATE_BILL: getDefaultPath('bills'),
   MOMO_PAID: getDefaultPath('bills/momo'),
+  CHECKIN_BILL: getDefaultPath('bills/checkinBill'),
 
   // Feedbacks
   SEND_FEEDBACK: getDefaultPath('feetbacks'),

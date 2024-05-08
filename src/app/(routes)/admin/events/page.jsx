@@ -5,16 +5,18 @@ import confirm from "antd/es/modal/confirm";
 import { IndexDisplay, colorTextDisplay, RenderAction, getItemWithColor, getLabelByValue } from "@/src/utils/DisplayHelper";
 import { useEffect, useState } from "react";
 import { useUser } from "@/src/context/UserContext";
+import { useRouter, usePathname } from "next/navigation";
 import api from "@/src/app/api/api";
 import ApiPath from "@/src/app/api/apiPath";
 import dayjs from 'dayjs';
-import { render } from "react-dom";
-import { DateTimeFormat, formatDate, formatRangeDate } from "@/src/utils/DateFormatter";
+import { formatRangeDate, isCheckinDate } from "@/src/utils/DateFormatter";
 import EventModal from "./DetailModal";
 import CreateModal from "./CreateModal";
 
 export default function Events() {
   const [form] = Form.useForm();
+  const router = useRouter();
+  const path = usePathname();
   const { isSuperAdmin, user } = useUser();
 
   const [loading, setLoading] = useState(false);
@@ -49,7 +51,7 @@ export default function Events() {
       key: 'type',
       align: 'center',
       render: (value) => {
-        return getLabelByValue(eventTypeList,value);
+        return getLabelByValue(eventTypeList, value);
       }
     },
     {
@@ -58,8 +60,8 @@ export default function Events() {
       key: 'status',
       width: '10%',
       align: 'center',
-      render: (status) => {
-        const {title, color} = getItemWithColor(statusList,status);
+      render: (status, record) => {
+        const { title, color } = getItemWithColor(statusList, status, record);
         return colorTextDisplay(title, color);
       }
     },
@@ -77,15 +79,15 @@ export default function Events() {
       key: 'action',
       align: 'center',
       width: "10%",
-      render: (record) => RenderAction(ShowDetail, DeleteItem, record)
+      render: (record) => RenderAction(ShowDetail, DeleteItem, record, CheckInBill)
     }
   ];
 
   const statusList = [
-    { label: "Tất cả", value: "", color: ""},
-    { label: "Chưa diễn ra", value: 0, color: "#ffd300"},
-    { label: "Đã khóa", value: 1, color: "red"},
-    { label: "Đã hoàn thành", value: 2, color: "green"}
+    { label: "Tất cả", value: "", color: "" },
+    { label: "Chưa diễn ra", value: 0, color: "#ffd300" },
+    { label: "Đã khóa", value: 1, color: "red" },
+    { label: "Đã hoàn thành", value: 2, color: "green" }
   ];
 
   const getTypeList = async () => {
@@ -118,8 +120,8 @@ export default function Events() {
       const params = {
         page: page,
         limit: limit,
-        host: isSuperAdmin() ? undefined: user?._id,
-        member: isSuperAdmin() ? undefined: user?._id,
+        host: isSuperAdmin() ? undefined : user?._id,
+        member: isSuperAdmin() ? undefined : user?._id,
         status: form.getFieldValue("status") === "" ? undefined : form.getFieldValue("status"),
         type: form.getFieldValue("type") === "" ? undefined : form.getFieldValue("type"),
         name: form.getFieldValue("name") === "" ? undefined : form.getFieldValue("name"),
@@ -156,7 +158,7 @@ export default function Events() {
       message.info("Sự kiện này đã bị khóa!");
       return;
     }
-    if (record?.status === 2){
+    if (record?.status === 2) {
       message.info("Sự kiện này đã hoàn thành. Không thể khóa!");
       return;
     }
@@ -170,10 +172,10 @@ export default function Events() {
         onOk: async () => {
           try {
             setLoading(true);
-            const params = { eventId: record?._id}; 
+            const params = { eventId: record?._id };
             const body = {};
             const res = await api.patch(ApiPath.DEACTIVATE_EVENT, body, { params });
-            if(!!res?.data) {
+            if (!!res?.data) {
               await getEvents();
               message.success(res?.message);
             } else {
@@ -190,10 +192,34 @@ export default function Events() {
     );
   };
 
+  const CheckInBill = async (item) => {
+    if (!isCheckinDate(item)) {
+      message.error("Chưa đến thời gian Check-in!");
+      return;
+    }
+    return (
+      confirm({
+        title: "Bạn có muốn mở check-in sự kiện này không?",
+        okText: "Có",
+        okType: "danger",
+        okCancel: true,
+        cancelText: "Không",
+        onOk: () => {
+          try {
+            router.push(`${path}/check-in?eventId=${item?._id}`)
+          } catch (error) {
+            console.error(error);
+            message.error("Đã có lỗi xảy ra! Vui lòng thử lại!");
+          }
+        }
+      })
+    );
+  }
+
   useEffect(() => {
     getTypeList();
     getEvents();
-  },[page, limit])
+  }, [page, limit])
 
   return (
     <>
@@ -202,14 +228,14 @@ export default function Events() {
           type="primary"
           shape="round"
           className=" mt-4 mr-2 main-button h-8"
-          icon={<PlusCircleOutlined/>}
+          icon={<PlusCircleOutlined />}
           onClick={() => setShowAddModal(true)}
         >
-          Thêm sự kiện mới 
+          Thêm sự kiện mới
         </Button>
       </div>
       <Form form={form} layout="vertical" className="p-4"
-       onFinish={getEvents}
+        onFinish={getEvents}
       >
         <Row gutter={12} className="flex justify-between">
           <Col xs={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 6 }} xxl={{ span: 6 }}>
@@ -217,7 +243,7 @@ export default function Events() {
               name="name"
               label={<span className="text-white font-bold">Tên sự kiện</span>}
             >
-              <Input placeholder="Nhập tên sự kiện" allowClear/>
+              <Input placeholder="Nhập tên sự kiện" allowClear />
             </Form.Item>
           </Col>
           <Col xs={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 6 }} xxl={{ span: 6 }}>
@@ -225,7 +251,7 @@ export default function Events() {
               name="type"
               label={<span className="text-white font-bold">Thể loại</span>}
             >
-              <Select options={eventTypeList} defaultValue={""}/>
+              <Select options={eventTypeList} defaultValue={""} />
             </Form.Item>
           </Col>
           <Col xs={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 6 }} xxl={{ span: 6 }}>
@@ -233,7 +259,7 @@ export default function Events() {
               name="status"
               label={<span className="text-white font-bold">Trạng thái</span>}
             >
-              <Select options={statusList} defaultValue={""}/>
+              <Select options={statusList} defaultValue={""} />
             </Form.Item>
           </Col>
           <Col xs={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 6 }} xxl={{ span: 6 }}>
@@ -241,8 +267,8 @@ export default function Events() {
               name="date"
               label={<span className="text-white font-bold">Khoảng ngày bắt đầu</span>}
             >
-              <DatePicker.RangePicker 
-                className="w-full" 
+              <DatePicker.RangePicker
+                className="w-full"
                 defaultValue={[dayjs().startOf('year'), dayjs().endOf('year')]}
                 format="DD/MM/YYYY"
                 allowClear={false}
@@ -251,8 +277,8 @@ export default function Events() {
           </Col>
         </Row>
         <Row gutter={12}>
-          <Button 
-            htmlType={'submit'} 
+          <Button
+            htmlType={'submit'}
             loading={loading}
             className="main-button h-8 w-full mx-2"
           >
@@ -273,7 +299,7 @@ export default function Events() {
           size="middle"
           columns={columnsTable}
           dataSource={eventList}
-          scroll={{x: 1000}}
+          scroll={{ x: 1000 }}
           loading={loading}
           pagination={{
             pageSize: limit,
@@ -282,7 +308,7 @@ export default function Events() {
             showSizeChanger: true,
             onChange: handleChangePage,
             pageSizeOptions: ["10", "20", "50", "100"],
-            className:"paging"
+            className: "paging"
           }}
         />
       </div>
