@@ -7,13 +7,13 @@ import {
   DatePicker,
   message
 } from 'antd';
-import {TagOutlined} from '@ant-design/icons'
+import { TagOutlined } from '@ant-design/icons'
 import React, { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
-import { 
-  DateFormat, 
-  MonthFormat, 
-  formatDate ,
+import {
+  DateFormat,
+  MonthFormat,
+  formatDate,
   YearFormat
 } from '@/src/utils/DateFormatter';
 import CountUp from 'react-countup';
@@ -31,12 +31,17 @@ export default function Views() {
   const [totalYear, setTotalYear] = useState(0);
   const [chartData, setChartData] = useState();
   const [rangeDay, setRangeDay] = useState([dayjs().startOf('month'), dayjs().endOf('month')]);
+  const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 1000);
 
-  const formatter = (value) => 
+  const formatter = (value) =>
     <CountUp
-      end={value} 
+      end={value}
     />;
-  
+
+  const handleResize = () => {
+    setIsSmallScreen(window.innerWidth < 1000);
+  };
+
   const handleDateChange = (values) => {
     setRangeDay(values)
   }
@@ -44,12 +49,12 @@ export default function Views() {
   const generateRandomColor = (numColors) => {
     const randomColor = () => Math.floor(Math.random() * 256);
     const colors = [];
-  
+
     for (let i = 0; i < numColors; i++) {
       const color = `rgba(${randomColor()}, ${randomColor()}, ${randomColor()}, 0.3)`;
       colors.push(color);
     }
-  
+
     return colors;
   }
 
@@ -62,7 +67,7 @@ export default function Views() {
     try {
       setLoading(true);
       const res = await api.get(ApiPath.GET_TICKET_SALES, { params });
-      if(res?.data) {
+      if (res?.data) {
         const profit = getTotalFromArray(res?.data[0].amountOfTicketList);
         switch (type) {
           case "day":
@@ -130,7 +135,7 @@ export default function Views() {
         endDate: formatDate(rangeDay[1])
       }
       const res = await api.get(ApiPath.GET_TICKET_SALES, { params });
-      if(res?.data) {
+      if (res?.data) {
         const colors = generateRandomColor(res?.data[0].eventNameList.length);
         const data = {
           labels: res?.data[0].eventNameList,
@@ -156,6 +161,14 @@ export default function Views() {
   }
 
   useEffect(() => {
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  useEffect(() => {
     getTotal();
   }, []);
 
@@ -166,58 +179,59 @@ export default function Views() {
   return (
     <>
       <div className='flex flex-wrap justify-between w-full'>
-          <Card bordered={false} className='m-4 lg:w-[29%] w-full' loading={loading}>
-            <Statistic
-              title={`Lượng vé tiêu thụ theo ngày: ${formatDate(dayjs(), DateFormat)}`}
-              value={totalDay}
-              valueStyle={{
-                color: '#3f8600',
-              }}
-              prefix={<TagOutlined />}
-              formatter={formatter}
-            />
-          </Card>
-          <Card bordered={false} className='m-4 lg:w-[29%] w-full' loading={loading}>
-            <Statistic
-              title={`Lượng vé tiêu thụ theo tháng: ${formatDate(dayjs(), MonthFormat)}`}
-              value={totalMonth}
-              valueStyle={{
-                color: '#3f8600',
-              }}
-              prefix={<TagOutlined />}
-              formatter={formatter}
-            />
-          </Card>
-          <Card bordered={false} className='m-4 lg:w-[29%] w-full' loading={loading}>
-            <Statistic
-              title={`Lượng vé tiêu thụ theo năm: ${formatDate(dayjs(), YearFormat)}`}
-              value={totalYear}
-              valueStyle={{
-                color: '#3f8600',
-              }}
-              prefix={<TagOutlined />}
-              formatter={formatter}
-            />
-          </Card>
+        <Card bordered={false} className='m-4 lg:w-[29%] w-full' loading={loading}>
+          <Statistic
+            title={`Lượng vé tiêu thụ theo ngày: ${formatDate(dayjs(), DateFormat)}`}
+            value={totalDay}
+            valueStyle={{
+              color: '#3f8600',
+            }}
+            prefix={<TagOutlined />}
+            formatter={formatter}
+          />
+        </Card>
+        <Card bordered={false} className='m-4 lg:w-[29%] w-full' loading={loading}>
+          <Statistic
+            title={`Lượng vé tiêu thụ theo tháng: ${formatDate(dayjs(), MonthFormat)}`}
+            value={totalMonth}
+            valueStyle={{
+              color: '#3f8600',
+            }}
+            prefix={<TagOutlined />}
+            formatter={formatter}
+          />
+        </Card>
+        <Card bordered={false} className='m-4 lg:w-[29%] w-full' loading={loading}>
+          <Statistic
+            title={`Lượng vé tiêu thụ theo năm: ${formatDate(dayjs(), YearFormat)}`}
+            value={totalYear}
+            valueStyle={{
+              color: '#3f8600',
+            }}
+            prefix={<TagOutlined />}
+            formatter={formatter}
+          />
+        </Card>
       </div>
       <div className='mx-4'>
         <Card
           className='max-h-[75vh] overflow-y-auto'
           loading={chartLoading}
           title={
-            <div className='flex justify-between'>
-              <div className='font-bold text-2xl'>BIỂU ĐỒ LƯỢNG VÉ TIÊU THỤ</div>
-              <DatePicker.RangePicker 
+            <div className='flex justify-between flex-wrap'>
+              <div className='font-bold text-2xl md:text-base my-2'>BIỂU ĐỒ LƯỢNG VÉ TIÊU THỤ</div>
+              <DatePicker.RangePicker
                 value={rangeDay}
                 onChange={handleDateChange}
                 format={DateFormat}
                 allowClear={false}
+                className='my-2'
               />
             </div>
           }
         >
-          {chartData && 
-            <BarChart 
+          {chartData &&
+            <BarChart
               options={{
                 responsive: true,
                 maintainAspectRatio: false,
@@ -226,7 +240,8 @@ export default function Views() {
                     beginAtZero: true
                   }
                 },
-              }} 
+                indexAxis: isSmallScreen ? 'y' : 'x'
+              }}
               data={chartData}
             />
           }

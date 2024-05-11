@@ -86,6 +86,7 @@ export const MobileMenu = ({ type }) => {
 
   const handleClick = (itemKey) => {
     if (itemKey === 'sign-out') {
+      setShowMenu(false);
       confirm({
         title: "Bạn có muốn đăng xuất không?",
         okText: "Có",

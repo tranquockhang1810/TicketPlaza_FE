@@ -31,11 +31,16 @@ export default function Views() {
   const [totalYear, setTotalYear] = useState(0);
   const [chartData, setChartData] = useState();
   const [rangeDay, setRangeDay] = useState([dayjs().startOf('year'), dayjs().endOf('year')]);
+  const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 1000);
 
   const formatter = (value) =>
     <CountUp
       end={value}
     />;
+
+  const handleResize = () => {
+    setIsSmallScreen(window.innerWidth < 1000);
+  };
 
   const handleDateChange = (values) => {
     setRangeDay(values)
@@ -89,6 +94,14 @@ export default function Views() {
   }
 
   useEffect(() => {
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  useEffect(() => {
     getChartData();
   }, [rangeDay])
 
@@ -99,10 +112,10 @@ export default function Views() {
           className='max-h-[90vh] pt-4 overflow-y-auto'
           loading={chartLoading}
           title={
-            <div className='flex justify-between'>
-              <div className='font-bold text-2xl'>BIỂU ĐỒ LƯỢT QUAN TÂM</div>
-              <div>
-                <span className='mr-4'>Thời gian diễn ra sự kiện:</span>
+            <div className='flex justify-between flex-wrap'>
+              <div className='font-bold text-2xl my-2'>BIỂU ĐỒ LƯỢT QUAN TÂM</div>
+              <div className='flex flex-wrap'>
+                <span className='mr-4 my-2'>Thời gian diễn ra sự kiện:</span>
                 <DatePicker.RangePicker
                   value={rangeDay}
                   onChange={handleDateChange}
@@ -117,11 +130,13 @@ export default function Views() {
             <BarChart
               options={{
                 responsive: true,
+                maintainAspectRatio: false,
                 scales: {
                   y: {
                     beginAtZero: true
                   }
                 },
+                indexAxis: isSmallScreen ? 'y' : 'x'
               }}
               data={chartData}
             />

@@ -109,12 +109,14 @@ export default function Page({ params: slParams }) {
         <Form form={form}>
           <div className="flex flex-wrap justify-between">
             {event?.tickets.map((ticket, index) => (
-              <div>
-                <Ticket
-                  record={event}
-                  ticket={ticket}
-                  client={true}
-                />
+              <div className="md:w-full max-w-[500px]">
+                <div>
+                  <Ticket
+                    record={event}
+                    ticket={ticket}
+                    client={true}
+                  />
+                </div>
                 <Form.Item
                   key={index}
                   name={index}
@@ -157,11 +159,11 @@ export default function Page({ params: slParams }) {
     <section>
       <Spin spinning={loading} size="large">
         <div className="mx-auto p-6">
-          <div className="w-full px-20 flex flex-wrap justify-center">
-            <div className="mb-4 mx-4">
+          <div className="w-full px-10 md:px-20 flex flex-wrap justify-center">
+            <div className="mb-4 mx-2">
               <img src={event?.photo} width={500} />
             </div>
-            <div className="mx-4 max-h-[500px] w-[500px] flex flex-col justify-center items-start text-white font-bold primary-bg rounded-xl">
+            <div className="mx-2 max-h-[500px] w-[500px] flex flex-col justify-center items-start text-white font-bold primary-bg rounded-xl">
               <h1 className='text-white w-full md:text-3xl text-base text-center pt-4'>
                 {event?.name}
               </h1>
@@ -190,7 +192,7 @@ export default function Page({ params: slParams }) {
               </ul>
             </div>
           </div>
-          <div className="w-full px-24 mt-4 flex flex-wrap justify-center">
+          <div className="w-full px-12 mt-4 flex flex-wrap justify-center">
             <ConfigProvider
               theme={{
                 components: {
@@ -201,7 +203,7 @@ export default function Page({ params: slParams }) {
                 }
               }}
             >
-              <Collapse items={items} defaultActiveKey={2} size="large" className="w-[500px] xl:w-4/5 2xl:w-3/4 collapse-center-icon" />
+              <Collapse items={items} defaultActiveKey={2} size="large" className="w-full md:w-4/5 2xl:w-3/4 collapse-center-icon" />
             </ConfigProvider>
           </div>
         </div>

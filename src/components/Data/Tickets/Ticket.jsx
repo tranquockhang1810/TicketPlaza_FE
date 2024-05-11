@@ -177,10 +177,10 @@ export default function Ticket({
       <Form
         form={form}
         layout='vertical'
-        className='flex flex-row my-4 max-w-[600px] min-h-[370px]'
+        className='flex flex-wrap md:flex-row flex-col my-4 min-h-[370px]'
         variant={isDisable ? 'borderless' : 'outlined'}
       >
-        <div className='primary-bg w-[60%] p-4 rounded-tl-xl rounded-bl-xl'>
+        <div className='primary-bg md:w-[60%] w-full p-4 md:rounded-tl-xl md:rounded-bl-xl overflow-y-auto'>
           <Form.Item
             label={<span className='text-white font-bold'>Sự kiện:</span>}
             className={!client ? 'text-justify' : 'text-justify mb-16'}
@@ -213,7 +213,7 @@ export default function Ticket({
             </div>
           )}
         </div>
-        <div className='primary-bg w-[40%] flex flex-col justify-evenly p-4 rounded-tr-xl rounded-br-xl border-l-2 border-dashed border-gray-200'>
+        <div className='primary-bg md:w-[40%] w-full flex flex-col justify-evenly p-4 md:rounded-tr-xl md:rounded-br-xl md:border-l-2 border-dashed border-gray-200'>
           <Form.Item
             initialValue={CurrencyDisplay(ticket?.price)}
             label={<span className='text-white font-bold'>Giá:</span>}

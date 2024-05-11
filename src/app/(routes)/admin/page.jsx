@@ -1,15 +1,12 @@
-export const metadata = {
-	title: 'TicketPlaza - Admin',
-	description: 'Hệ thống mua vé sự kiện',
-}
+'use client'
+import { useRouter } from "next/navigation"
+import { Spin } from "antd";
 
 export default function Admin() {
+  const router = useRouter();
   return (
-    <div className="flex flex-col justify-center items-center font-bold text-white">
-      <div className=" text-center text-8xl pt-60 pb-10">TICKET PLAZA - CMS</div>
-      <div className="text-2xl">
-        Hệ thống quản lý Ticket Plaza dành cho Admin!
-      </div>
-    </div>
+    <Spin spinning={true}>
+      {router.push('/admin/profit')}
+    </Spin>
   )
 }

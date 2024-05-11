@@ -247,7 +247,7 @@ export default function Header({history}) {
                 onClick={() => {history.push('/')}}
               >
                 <img
-                  className='w-full h-12'
+                  className='h-12'
                   src="/images/logo.png"
                   alt="TicketPlaza"
                 />
