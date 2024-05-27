@@ -55,7 +55,7 @@ export default function AccountInfo() {
       const res = await api.patch(ApiPath.UPDATE_USER, body, { params });
       if(res?.data) {
         message.success(res?.message);
-        await fetchUserData();
+        await fetchUserData(user?._id);
         setIsDisable(true);
       } else {
         message.error(res?.error?.message || "Đã có lỗi xảy ra!");

@@ -101,7 +101,7 @@ export default function Profile() {
         <h1 className="font-bold text-white text-center w-full my-2 text-4xl">
           THÔNG TIN TÀI KHOẢN
         </h1>
-        <Form form={form} layout="vertical" className="px-10 py-4" onFinish={handleChangeProfile}>
+        <Form form={form} layout="vertical" className="px-10 py-4">
           <Form.Item
             name="fullName"
             label={<span className="font-bold text-white">Họ tên</span>}
@@ -166,6 +166,7 @@ export default function Profile() {
                 className="main-button w-full mt-4 h-8" 
                 htmlType='submit'
                 loading={profileLoading}
+                onClick={handleChangeProfile}
               >
                 Lưu
               </Button>
