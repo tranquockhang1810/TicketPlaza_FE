@@ -37,7 +37,7 @@ export default function Banner() {
         speed: 500,
         autoplaySpeed: 5000,
         infinite: true,
-        slidesToShow: 1,
+        slidesToShow: 2,
         slidesToScroll: 1,
         initialSlide: 0,
     };
@@ -49,7 +49,7 @@ export default function Banner() {
               <Carousel {...settings}>
                 {BANNERS.map((item, index) => (
                   <div key={index}>
-                    <img alt="banner" src={item} className="w-full mx-auto" />
+                    <img alt="banner" src={item} className="w-[100vh] mx-auto" />
                   </div>
                 ))}
               </Carousel>
