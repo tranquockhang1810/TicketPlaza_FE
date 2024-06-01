@@ -24,7 +24,8 @@ export default function Page({ params: slParams }) {
     try {
       setLoading(true);
       const params = {
-        eventId: slParams.slug
+        eventId: slParams.slug,
+        ticketStatus: 0
       }
       const updateViewRes = await api.patch(ApiPath.UPDATE_VIEW, {}, { params })
       if (updateViewRes?.data[0]?.data.length === 0) return;
