@@ -286,7 +286,7 @@ export default function Tab01({
             { required: forCreate, message: "Vui lòng nhập mô tả!" }
           ]}
         >
-          <Input.TextArea className="w-full text-right" minLength={10} autoSize={{ minRows: 1, maxRows: 20 }} readOnly={isDisable} />
+          <Input.TextArea className="w-full text-right" minLength={10} autoSize={{ minRows: 1, maxRows: 10 }} readOnly={isDisable} />
         </Form.Item>
         {/* Hình ảnh */}
         <Form.Item

@@ -51,7 +51,7 @@ export default function Ticket({
           price: price !== "" ? convertStringToNumber(price) : undefined,
           releaseDate: newTicket ? dateWithUct(dayjs()) : undefined,
           expirationDate: dateWithUct(expirationDate),
-          totalAmount: newTicket ? totalAmount : undefined,
+          totalAmount: totalAmount !== "" ? totalAmount : undefined,
           status: newTicket ? 0 : undefined,
         }
         let res = {}
