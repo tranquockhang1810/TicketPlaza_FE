@@ -105,17 +105,18 @@ const EventTypeDetailModal = ({
           className="main-button" 
           style={{backgroundColor: "green"}} 
           onClick={() => ActivateType(record)}
+          key={"submit"}
         >
           Kích hoạt thể loại
         </Button> : undefined,
         !isDisable ?
-        <Button type="default" loading={loading} onClick={() => {
+        <Button type="default" loading={loading} key={"cancel"} onClick={() => {
           form.resetFields();
           setIsDisable(true);
         }}>
           Hủy
         </Button>: undefined,
-        <Button type="primary" loading={loading} className="nav-button" onClick={handleSubmitButton}>
+        <Button type="primary" key={"submit"} loading={loading} className="nav-button" onClick={handleSubmitButton}>
           {isDisable ? "Chỉnh sửa" : "Lưu"}
         </Button>
       ]}

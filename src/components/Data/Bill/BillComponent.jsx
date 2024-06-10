@@ -33,10 +33,10 @@ export default function BillCard({ bill, getBillList }) {
           bordered={false}
           className='m-4 w-[600px]'
           actions={bill?.feetbackStatus === 0 && bill?.status === 2 ? [
-            <Button className='nav-button w-11/12' onClick={() => setShowFeedback(true)} icon={<CommentOutlined />}>Bình luận</Button>,
-            <Button className='nav-button w-11/12' onClick={() => setShowDetail(true)} icon={<EditOutlined />}>Chi tiết</Button>,
+            <Button key={"feedback"} className='nav-button w-11/12' onClick={() => setShowFeedback(true)} icon={<CommentOutlined />}>Bình luận</Button>,
+            <Button key={"detail"} className='nav-button w-11/12' onClick={() => setShowDetail(true)} icon={<EditOutlined />}>Chi tiết</Button>,
           ] : [
-            <Button className='nav-button w-11/12' onClick={() => setShowDetail(true)} icon={<EditOutlined />}>Chi tiết</Button>,
+            <Button key={"detail"} className='nav-button w-11/12' onClick={() => setShowDetail(true)} icon={<EditOutlined />}>Chi tiết</Button>,
           ]}
         >
           <div className='h-fit text-white'>

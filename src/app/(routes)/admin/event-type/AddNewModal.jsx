@@ -50,7 +50,7 @@ const AddNewModal = ({
       title={<span className="text-xl font-bold">Thêm thể loại mới</span>}
       onCancel={() => setShowModal(false)}
       footer={[
-        <Button type="primary" loading={loading} className="nav-button" onClick={handleSubmitButton}>
+        <Button type="primary" key={"submit"} loading={loading} className="nav-button" onClick={handleSubmitButton}>
           Thêm
         </Button>
       ]}

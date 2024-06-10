@@ -44,7 +44,7 @@ export default function Promotion(){
                         <p className='lg:text-xl text base font-istok h-full'>
                             <b>LOA LOA LOA 📣 GENFESTERS CHÚ Ý</b><br></br><br></br>
 
-                            Chỉ còn 1 ngày nữa để bạn có thể tận hưởng những ưu đãi đặc biệt từ Levi's - 
+                            Chỉ còn 1 ngày nữa để bạn có thể tận hưởng những ưu đãi đặc biệt từ Levis - 
                             nhãn hàng thời trang denim phong cách với Deal độc quyền chỉ dành cho GENfest. Những chiếc voucher siêu xịn trị giá 500K và 200K đang chờ bạn:<br></br><br></br>
 
                             🔥 GenFan - 2,000 Voucher 500k áp dụng cho sản phẩm quần nguyên giá từ 2 triệu trở lên

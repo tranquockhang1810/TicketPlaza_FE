@@ -35,7 +35,7 @@ export default function EventCard({ event, tickets, typeList }) {
         hoverable
         bordered={false}
         cover={<img className="transition-transform duration-300 transform scale-100 group-hover:scale-110" alt="eventImg" src={event?.photo} />}
-        actions={[<span>MUA VÉ NGAY</span>]}
+        actions={[<span key={event?._id}>MUA VÉ NGAY</span>]}
         className="w-[320px] event-card"
         onClick={() => router.push(`/events/${event._id}`)}
     >

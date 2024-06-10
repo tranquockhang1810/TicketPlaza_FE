@@ -4,9 +4,11 @@ import ApiPath from "@/src/app/api/apiPath";
 import { Spin, message } from "antd";
 import { Html5QrcodeScanner } from "html5-qrcode";
 import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 export default function CheckIn() {
   const [loading, setLoading] = useState(false);
+  const eventId = useSearchParams().get("eventId");
 
   useEffect(() => {
     const scanner = new Html5QrcodeScanner('reader', {
@@ -24,12 +26,13 @@ export default function CheckIn() {
         setLoading(true);
         const params = {
           billId: result,
+          eventId: eventId
         }
         const res = await api.patch(ApiPath.CHECKIN_BILL, {}, { params });
-        if(res?.data[0].data) {
+        if(res?.data[0].status !== "fail") {
           message.success(res?.message);
         } else 
-        message.error(res?.error?.message || "Mã hóa đơn không hợp lệ!");
+        message.error(res?.message || "Mã hóa đơn không hợp lệ!");
         setTimeout(null, 3000);
       } catch (error) {
         console.error(error);

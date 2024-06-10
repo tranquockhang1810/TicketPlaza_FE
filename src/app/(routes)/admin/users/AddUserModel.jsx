@@ -74,13 +74,13 @@ const AddUserModal = ({
       title={<span className="text-xl font-bold">Thêm tài khoản mới</span>}
       onCancel={() => setShowModal(false)}
       footer={[
-        <Button type="default" loading={loading} onClick={() => {
+        <Button type="default" key={"cancel"} loading={loading} onClick={() => {
           form.resetFields();
           setShowModal(false);
         }}>
           Hủy
         </Button>,
-        <Button type="primary" loading={loading} className="nav-button" onClick={handleSubmitButton}>
+        <Button type="primary" key={"submit"} loading={loading} className="nav-button" onClick={handleSubmitButton}>
           Lưu
         </Button>
       ]}

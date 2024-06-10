@@ -118,7 +118,7 @@ const UserDetailModal = ({
         }}>
           Hủy
         </Button>: undefined,
-        <Button type="primary" loading={loading} className="nav-button" onClick={handleSubmitButton}>
+        <Button type="primary" key={"submit"} loading={loading} className="nav-button" onClick={handleSubmitButton}>
           {isDisable ? "Chỉnh sửa" : "Lưu"}
         </Button>
       ]}

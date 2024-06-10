@@ -110,7 +110,7 @@ export default function Page({ params: slParams }) {
         <Form form={form}>
           <div className="flex flex-wrap justify-between">
             {event?.tickets.map((ticket, index) => (
-              <div className="md:w-full max-w-[500px]">
+              <div key={index} className="md:w-full max-w-[500px]">
                 <div>
                   <Ticket
                     record={event}
