@@ -13,7 +13,7 @@ export default function Tab03({
   showModal,
   getEvents,
 }) {
-  const { user } = useUser();
+  const { user, isSuperAdmin } = useUser();
   const [form] = Form.useForm();
   const [initMembersIDs, setInitMembersIDs] = useState([ record?.host, ...record?.members]);
   const [loading, setLoading] = useState(false);
@@ -146,12 +146,12 @@ export default function Tab03({
     <div>
       <div className="text-center mb-2">
         <span className="font-bold">
-          VAI TRÒ CỦA BẠN: {(user?._id === record?.host || record?.members.includes(user?._id)) 
+          VAI TRÒ CỦA BẠN: {(user?._id === record?.host || record?.members.includes(user?._id) || isSuperAdmin()) 
           ? `THÀNH VIÊN ${user?._id === record?.host ? ' - HOST' : ""}` 
           : 'KHÔNG PHẢI THÀNH VIÊN'}
         </span>
       </div>
-      {user?._id === record?.host && (
+      {user?._id === record?.host || isSuperAdmin() && (
         <Form
           layout="horizontal"
           form={form}
@@ -198,7 +198,7 @@ export default function Tab03({
               })}
             </Select>
           </Form.Item>
-          {user?._id === record?.host && (
+          {user?._id === record?.host || isSuperAdmin() && (
             <Form.Item>
               <Button
                 className="nav-button w-full"
