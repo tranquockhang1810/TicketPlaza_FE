@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { Form, Input, Button, Divider, message } from 'antd';
 import { ArrowLeftOutlined, GoogleOutlined } from '@ant-design/icons';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -69,6 +69,7 @@ export default function Login() {
   }, [googleLogin]);
 
   return (
+    <Suspense fallback={<div>Loading...</div>}>
       <div
         className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8"
       >
@@ -154,5 +155,6 @@ export default function Login() {
           </Form>
         </div>
       </div>
+    </Suspense>
   );
 }
