@@ -1,3 +1,4 @@
+import { Suspense } from "react"
 import Layout from "../components/Layout/Base"
 import { EventsSection, Promotion } from "../components/Layout/Section"
 
@@ -8,9 +9,11 @@ export const metadata = {
 
 export default function Homepage() {
 	return (
-		<Layout>
-			<EventsSection header={"SỰ KIỆN HOT"} />
-			<Promotion />
-		</Layout>
+		<Suspense>
+			<Layout>
+				<EventsSection header={"SỰ KIỆN HOT"} />
+				<Promotion />
+			</Layout>
+		</Suspense>
 	)
 }

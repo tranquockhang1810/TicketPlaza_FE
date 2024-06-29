@@ -69,7 +69,7 @@ export default function Login() {
   }, [googleLogin]);
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense>
       <div
         className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8"
       >

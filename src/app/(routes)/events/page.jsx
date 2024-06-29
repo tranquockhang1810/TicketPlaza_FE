@@ -10,7 +10,7 @@ export const metadata = {
 export default function EventsPage(){
 	return(
 		<Layout noBanner={true}>
-			<Suspense fallback={<div>Loading...</div>}>
+			<Suspense>
 				<EventsSection header={"CÁC SỰ KIỆN"} filter={true}/>
 			</Suspense>
 		</Layout>
