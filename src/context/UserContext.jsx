@@ -57,6 +57,8 @@ export const UserProvider = ({ children }) => {
     return user && user.type === 2;
   }
 
+  //Testting
+
   return (
     <UserContext.Provider value={{ 
       user, 
